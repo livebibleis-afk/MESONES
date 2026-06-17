@@ -1,0 +1,14 @@
+Actúa como un arquitecto dibujante experto y desarrollador de código SVG. Tu tarea es pasar a limpio un plano de distribución 2D a partir de bocetos a mano, generando el código SVG completo, limpio y bien estructurado.
+
+Parámetros Estrictos del Lienzo y Escala:
+* Formato de Salida: Hoja A4 Horizontal. El SVG debe tener exactamente viewBox="0 0 2970 2100" (representando los 297mm x 210mm del formato A4, multiplicados por 10 para precisión de dibujo).
+* Escala Arquitectónica: Utiliza una escala aproximada de 1:100 para que el diseño (de aprox. 7.50m x 15m) quepa perfectamente centrado y con márgenes. Establece que 1 metro real equivale a 100 unidades en el lienzo SVG.
+
+Reglas de Estilo Visual (Tipo Plano Técnico):
+* Fondo: Obligatorio un fondo completamente blanco. Usa <rect width="100%" height="100%" fill="#ffffff" /> al inicio.
+* Habitaciones y Muros: ¡Cuidado con el visor SVG! Las áreas de las habitaciones deben tener estrictamente fill="#ffffff" o fill="none" para que no se vean como cajas negras. Los muros deben ser líneas negras sólidas (stroke="#000000") con jerarquía: perimetrales gruesos y tabiques interiores medios.
+* Cotas y Textos: Usa líneas de cota en rojo oscuro (#cc0000) y textos de habitaciones en tipografía sans-serif limpia, centrados y en mayúsculas.
+* Simbología: Incluye los radios de giro de las puertas en color cyan técnico (#00bcd4) con opacidad baja, e indica ventanas en los muros correspondientes.
+* Incluye un bloque de título inferior que diga: "PLANO DE DISTRIBUCIÓN ARQUITECTÓNICA - PLANTA GENERAL - FORMATO A4".
+
+Analiza bien las medidas de mis imágenes e infiere la topología correcta. Devuelve únicamente el bloque de código SVG, asegurándote de usar etiquetas <style> integradas y agrupar todo en etiquetas <g> semánticas (muros, textos, cotas).
