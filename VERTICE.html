@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano - Cotas Precisas y Muros Interiores</title>
+    <title>Plano - Cotas y Muros Modificados</title>
     <style>
         /* ==========================================
            VARIABLES DE TEMA (CLARO POR DEFECTO)
@@ -196,15 +196,17 @@
             </g>
 
             <g id="layer-interior">
-              <path d="M 750 0 L 750 125 L 1500 125" class="wall-int" />
+              <path d="M 750 0 L 750 189 L 1500 189" class="wall-int" />
               
-              <path d="M 1198 750 L 1198 560 L 1500 560" class="wall-int" />
+              <path d="M 1198 750 L 1198 529 L 1500 529" class="wall-int" />
               
-              <line x1="0" y1="625" x2="346" y2="625" class="wall-int" />
+              <line x1="0" y1="659" x2="346" y2="659" class="wall-int" />
               
-              <line x1="346" y1="167" x2="346" y2="0" class="wall-int" />
+              <line x1="346" y1="659" x2="346" y2="167" class="wall-int" />
               
-              <line x1="346" y1="167" x2="0" y2="167" class="wall-int" />
+              <line x1="248" y1="167" x2="0" y2="167" class="wall-int" />
+
+              <line x1="0" y1="302" x2="346" y2="302" class="wall-int" />
             </g>
 
             <g id="layer-cotas">
@@ -212,6 +214,11 @@
               <line x1="0" y1="-140" x2="0" y2="-100" class="dim-line" />
               <line x1="750" y1="-140" x2="750" y2="-100" class="dim-line" />
               <text x="375" y="-145" class="dim-text">7.50 m</text>
+
+              <line x1="720" y1="0" x2="720" y2="189" class="dim-line" />
+              <line x1="705" y1="0" x2="735" y2="0" class="dim-line" />
+              <line x1="705" y1="189" x2="735" y2="189" class="dim-line" />
+              <text x="695" y="94.5" transform="rotate(-90 695 94.5)" class="dim-text" style="font-size: 24px;">1.89 m</text>
 
               <line x1="861" y1="870" x2="1198" y2="870" class="dim-line" />
               <line x1="861" y1="850" x2="861" y2="890" class="dim-line" />
@@ -222,42 +229,82 @@
               <line x1="1500" y1="850" x2="1500" y2="890" class="dim-line" />
               <text x="1349" y="915" class="dim-text">3.02 m</text>
 
-              <line x1="1620" y1="560" x2="1620" y2="750" class="dim-line" />
-              <line x1="1600" y1="560" x2="1640" y2="560" class="dim-line" />
+              <line x1="1620" y1="529" x2="1620" y2="750" class="dim-line" />
+              <line x1="1600" y1="529" x2="1640" y2="529" class="dim-line" />
               <line x1="1600" y1="750" x2="1640" y2="750" class="dim-line" />
-              <text x="1660" y="655" transform="rotate(-90 1660 655)" class="dim-text">1.90 m</text>
+              <text x="1660" y="639.5" transform="rotate(-90 1660 639.5)" class="dim-text">2.21 m</text>
               
-              <line x1="0" y1="600" x2="346" y2="600" class="dim-line" />
-              <line x1="0" y1="590" x2="0" y2="610" class="dim-line" />
-              <line x1="346" y1="590" x2="346" y2="610" class="dim-line" />
-              <text x="173" y="585" class="dim-text" style="font-size: 24px;">3.46 m</text>
+              <line x1="1620" y1="347" x2="1620" y2="529" class="dim-line" />
+              <line x1="1600" y1="347" x2="1640" y2="347" class="dim-line" />
+              <text x="1660" y="438" transform="rotate(-90 1660 438)" class="dim-text">1.82 m</text>
+
+              <line x1="1700" y1="189" x2="1700" y2="669" class="dim-line" />
+              <line x1="1680" y1="189" x2="1720" y2="189" class="dim-line" />
+              <line x1="1680" y1="669" x2="1720" y2="669" class="dim-line" />
+              <text x="1740" y="429" transform="rotate(-90 1740 429)" class="dim-text">4.80 m</text>
+
+              <line x1="1170" y1="529" x2="1170" y2="750" class="dim-line" />
+              <line x1="1160" y1="529" x2="1180" y2="529" class="dim-line" />
+              <line x1="1160" y1="750" x2="1180" y2="750" class="dim-line" />
+              <text x="1150" y="639.5" transform="rotate(-90 1150 639.5)" class="dim-text" style="font-size: 24px;">2.21 m</text>
+              
+              <line x1="0" y1="630" x2="346" y2="630" class="dim-line" />
+              <line x1="0" y1="620" x2="0" y2="640" class="dim-line" />
+              <line x1="346" y1="620" x2="346" y2="640" class="dim-line" />
+              <text x="173" y="615" class="dim-text" style="font-size: 24px;">3.46 m</text>
 
               <line x1="400" y1="0" x2="400" y2="167" class="dim-line" />
               <line x1="380" y1="0" x2="420" y2="0" class="dim-line" />
               <line x1="380" y1="167" x2="420" y2="167" class="dim-line" />
               <text x="440" y="90" transform="rotate(-90 440 90)" class="dim-text">1.67 m</text>
+
+              <line x1="248" y1="120" x2="346" y2="120" class="dim-line" />
+              <line x1="248" y1="105" x2="248" y2="135" class="dim-line" />
+              <line x1="346" y1="105" x2="346" y2="135" class="dim-line" />
+              <text x="297" y="90" class="dim-text">0.98 m</text>
+
+              <line x1="-80" y1="167" x2="-80" y2="302" class="dim-line" />
+              <line x1="-95" y1="167" x2="-65" y2="167" class="dim-line" />
+              <line x1="-95" y1="302" x2="-65" y2="302" class="dim-line" />
+              <text x="-100" y="234.5" transform="rotate(-90 -100 234.5)" class="dim-text">1.35 m</text>
+
+              <line x1="380" y1="167" x2="380" y2="659" class="dim-line" />
+              <line x1="365" y1="167" x2="395" y2="167" class="dim-line" />
+              <line x1="365" y1="659" x2="395" y2="659" class="dim-line" />
+              <text x="405" y="413" transform="rotate(-90 405 413)" class="dim-text">4.92 m</text>
+
+              <line x1="40" y1="302" x2="40" y2="659" class="dim-line" />
+              <line x1="25" y1="302" x2="55" y2="302" class="dim-line" />
+              <line x1="25" y1="659" x2="55" y2="659" class="dim-line" />
+              <text x="75" y="480" transform="rotate(-90 75 480)" class="dim-text" style="font-size: 24px;">3.57 m</text>
             </g>
 
             <g id="layer-labels">
               <text x="-40" y="-40" class="vertex-label">A</text>
-              <text x="346" y="-40" class="vertex-label">E</text> <text x="750" y="-40" class="vertex-label">F</text>
+              <text x="346" y="-40" class="vertex-label">E</text>
+              <text x="750" y="-40" class="vertex-label">F</text>
+              
               <text x="1540" y="-40" class="vertex-label">B</text>
-              <text x="1540" y="125" class="vertex-label">K</text>
-              <text x="1540" y="250" class="vertex-label">L</text>
-              <text x="1540" y="375" class="vertex-label">M</text>
-              <text x="1540" y="500" class="vertex-label">N</text>
-              <text x="1540" y="560" class="vertex-label">O</text>
+              <text x="1540" y="189" class="vertex-label">K</text>
+              <text x="1540" y="268" class="vertex-label">L</text>
+              <text x="1540" y="347" class="vertex-label">N</text>
+              <text x="1540" y="529" class="vertex-label">O</text>
+              <text x="1540" y="669" class="vertex-label">M</text>
               <text x="1540" y="790" class="vertex-label">C</text>
+              
               <text x="1198" y="790" class="vertex-label">J</text>
               <text x="861" y="790" class="vertex-label">I</text>
               <text x="-40" y="790" class="vertex-label">D</text>
-              <text x="-40" y="167" class="vertex-label">G</text> <text x="-40" y="500" class="vertex-label">H</text>
-              <text x="-40" y="625" class="vertex-label">P</text>
+              
+              <text x="-40" y="167" class="vertex-label">G</text>
+              <text x="-40" y="302" class="vertex-label">H</text>
+              <text x="-40" y="659" class="vertex-label">P</text>
 
-              <text x="715" y="155" class="vertex-label-int">a</text>
-              <text x="1165" y="530" class="vertex-label-int">b</text>
-              <text x="380" y="635" class="vertex-label-int">c</text>
-              <text x="380" y="195" class="vertex-label-int">d</text> </g>
+              <text x="715" y="219" class="vertex-label-int">a</text>
+              <text x="1165" y="500" class="vertex-label-int">b</text>
+              <text x="380" y="669" class="vertex-label-int">c</text>
+              <text x="380" y="195" class="vertex-label-int">d</text>
+            </g>
           </g>
         
           <g id="layer-titleblock" transform="translate(100, 1920)">
