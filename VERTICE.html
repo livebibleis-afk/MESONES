@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano - Vértices y Puntos Distribuidos</title>
+    <title>Plano - Cotas Precisas y Muros Interiores</title>
     <style>
         /* ==========================================
            VARIABLES DE TEMA (CLARO POR DEFECTO)
@@ -164,7 +164,9 @@
         </button>
         <div id="layer-menu">
             <label><input type="checkbox" checked onchange="toggleLayer('layer-perimeter', this)"> Perímetro Exterior</label>
-            <label><input type="checkbox" checked onchange="toggleLayer('layer-labels', this)"> Letras Completo (A - O)</label>
+            <label><input type="checkbox" checked onchange="toggleLayer('layer-interior', this)"> Muros Interiores</label>
+            <label><input type="checkbox" checked onchange="toggleLayer('layer-labels', this)"> Letras Completo (A-P, a-d)</label>
+            <label><input type="checkbox" checked onchange="toggleLayer('layer-cotas', this)"> Cotas / Dimensiones</label>
             <label><input type="checkbox" checked onchange="toggleLayer('layer-titleblock', this)"> Cajetín de Título</label>
         </div>
     </div>
@@ -175,7 +177,11 @@
             .bg { fill: var(--bg-svg); transition: fill 0.3s; }
             .room { fill: var(--bg-svg); transition: fill 0.3s; }
             .wall-ext { fill: none; stroke: var(--line-color); stroke-width: 8; stroke-linecap: square; stroke-linejoin: miter; transition: stroke 0.3s; }
-            .vertex-label { fill: var(--accent-color); font-family: sans-serif; font-size: 56px; font-weight: bold; text-anchor: middle; dominant-baseline: middle; transition: fill 0.3s; }
+            .wall-int { fill: none; stroke: var(--line-color); stroke-width: 5; stroke-linecap: square; stroke-linejoin: miter; transition: stroke 0.3s; }
+            .vertex-label { fill: var(--accent-color); font-family: sans-serif; font-size: 50px; font-weight: bold; text-anchor: middle; dominant-baseline: middle; transition: fill 0.3s; }
+            .vertex-label-int { fill: var(--accent-color); font-family: sans-serif; font-size: 40px; font-weight: bold; text-anchor: middle; dominant-baseline: middle; transition: fill 0.3s; }
+            .dim-line { fill: none; stroke: var(--accent-color); stroke-width: 3; transition: stroke 0.3s; }
+            .dim-text { fill: var(--accent-color); font-family: sans-serif; font-size: 28px; font-weight: bold; text-anchor: middle; transition: fill 0.3s; }
             .title-block { fill: var(--bg-svg); stroke: var(--line-color); stroke-width: 4; transition: all 0.3s; }
             .title-text-main { fill: var(--text-main); font-family: sans-serif; font-size: 36px; font-weight: bold; text-anchor: middle; letter-spacing: 4px; transition: fill 0.3s; }
             .title-text-sub { fill: var(--text-sub); font-family: sans-serif; font-size: 20px; text-anchor: middle; letter-spacing: 2px; transition: fill 0.3s; }
@@ -189,30 +195,69 @@
               <rect x="0" y="0" width="750" height="1500" class="wall-ext" />
             </g>
 
+            <g id="layer-interior">
+              <path d="M 750 0 L 750 125 L 1500 125" class="wall-int" />
+              
+              <path d="M 1198 750 L 1198 560 L 1500 560" class="wall-int" />
+              
+              <line x1="0" y1="625" x2="346" y2="625" class="wall-int" />
+              
+              <line x1="346" y1="167" x2="346" y2="0" class="wall-int" />
+              
+              <line x1="346" y1="167" x2="0" y2="167" class="wall-int" />
+            </g>
+
+            <g id="layer-cotas">
+              <line x1="0" y1="-120" x2="750" y2="-120" class="dim-line" />
+              <line x1="0" y1="-140" x2="0" y2="-100" class="dim-line" />
+              <line x1="750" y1="-140" x2="750" y2="-100" class="dim-line" />
+              <text x="375" y="-145" class="dim-text">7.50 m</text>
+
+              <line x1="861" y1="870" x2="1198" y2="870" class="dim-line" />
+              <line x1="861" y1="850" x2="861" y2="890" class="dim-line" />
+              <text x="1029" y="915" class="dim-text">3.37 m</text>
+
+              <line x1="1198" y1="870" x2="1500" y2="870" class="dim-line" />
+              <line x1="1198" y1="850" x2="1198" y2="890" class="dim-line" />
+              <line x1="1500" y1="850" x2="1500" y2="890" class="dim-line" />
+              <text x="1349" y="915" class="dim-text">3.02 m</text>
+
+              <line x1="1620" y1="560" x2="1620" y2="750" class="dim-line" />
+              <line x1="1600" y1="560" x2="1640" y2="560" class="dim-line" />
+              <line x1="1600" y1="750" x2="1640" y2="750" class="dim-line" />
+              <text x="1660" y="655" transform="rotate(-90 1660 655)" class="dim-text">1.90 m</text>
+              
+              <line x1="0" y1="600" x2="346" y2="600" class="dim-line" />
+              <line x1="0" y1="590" x2="0" y2="610" class="dim-line" />
+              <line x1="346" y1="590" x2="346" y2="610" class="dim-line" />
+              <text x="173" y="585" class="dim-text" style="font-size: 24px;">3.46 m</text>
+
+              <line x1="400" y1="0" x2="400" y2="167" class="dim-line" />
+              <line x1="380" y1="0" x2="420" y2="0" class="dim-line" />
+              <line x1="380" y1="167" x2="420" y2="167" class="dim-line" />
+              <text x="440" y="90" transform="rotate(-90 440 90)" class="dim-text">1.67 m</text>
+            </g>
+
             <g id="layer-labels">
               <text x="-40" y="-40" class="vertex-label">A</text>
-              
-              <text x="500" y="-40" class="vertex-label">E</text>
-              <text x="1000" y="-40" class="vertex-label">F</text>
-              
+              <text x="346" y="-40" class="vertex-label">E</text> <text x="750" y="-40" class="vertex-label">F</text>
               <text x="1540" y="-40" class="vertex-label">B</text>
-              
               <text x="1540" y="125" class="vertex-label">K</text>
               <text x="1540" y="250" class="vertex-label">L</text>
               <text x="1540" y="375" class="vertex-label">M</text>
               <text x="1540" y="500" class="vertex-label">N</text>
-              <text x="1540" y="625" class="vertex-label">O</text>
-              
+              <text x="1540" y="560" class="vertex-label">O</text>
               <text x="1540" y="790" class="vertex-label">C</text>
-              
-              <text x="1000" y="790" class="vertex-label">J</text>
-              <text x="500" y="790" class="vertex-label">I</text>
-              
+              <text x="1198" y="790" class="vertex-label">J</text>
+              <text x="861" y="790" class="vertex-label">I</text>
               <text x="-40" y="790" class="vertex-label">D</text>
-              
-              <text x="-40" y="500" class="vertex-label">H</text>
-              <text x="-40" y="250" class="vertex-label">G</text>
-            </g>
+              <text x="-40" y="167" class="vertex-label">G</text> <text x="-40" y="500" class="vertex-label">H</text>
+              <text x="-40" y="625" class="vertex-label">P</text>
+
+              <text x="715" y="155" class="vertex-label-int">a</text>
+              <text x="1165" y="530" class="vertex-label-int">b</text>
+              <text x="380" y="635" class="vertex-label-int">c</text>
+              <text x="380" y="195" class="vertex-label-int">d</text> </g>
           </g>
         
           <g id="layer-titleblock" transform="translate(100, 1920)">
