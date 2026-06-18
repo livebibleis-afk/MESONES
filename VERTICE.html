@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano - Vértices y Herramientas</title>
+    <title>Plano - Vértices y Puntos Distribuidos</title>
     <style>
         /* ==========================================
            VARIABLES DE TEMA (CLARO POR DEFECTO)
@@ -52,7 +52,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             background-color: var(--bg-svg);
             transition: background-color 0.3s ease;
-            margin-top: 60px; /* Espacio para que el panel no tape el plano al hacer scroll */
+            margin-top: 60px;
         }
 
         svg {
@@ -99,14 +99,14 @@
             color: var(--bg-svg);
         }
 
-        /* Panel Superior Izquierdo (Impresión y Tema) */
+        /* Panel Superior Izquierdo */
         #top-left-panel { left: 20px; }
 
-        /* Panel Superior Derecho (Capas) */
+        /* Panel Superior Derecho */
         #top-right-panel { right: 20px; flex-direction: column; align-items: flex-end; }
         
         #layer-menu {
-            display: none; /* Oculto por defecto */
+            display: none;
             flex-direction: column;
             gap: 8px;
             margin-top: 10px;
@@ -127,7 +127,7 @@
         }
 
         /* ==========================================
-           ESTILOS PARA IMPRESIÓN (Limpia la UI)
+           ESTILOS PARA IMPRESIÓN
            ========================================== */
         @media print {
             body {
@@ -135,7 +135,7 @@
                 padding: 0;
             }
             .ui-panel {
-                display: none !important; /* Oculta los botones al imprimir */
+                display: none !important;
             }
             .plano-container {
                 box-shadow: none;
@@ -164,7 +164,7 @@
         </button>
         <div id="layer-menu">
             <label><input type="checkbox" checked onchange="toggleLayer('layer-perimeter', this)"> Perímetro Exterior</label>
-            <label><input type="checkbox" checked onchange="toggleLayer('layer-labels', this)"> Vértices (A, B, C, D)</label>
+            <label><input type="checkbox" checked onchange="toggleLayer('layer-labels', this)"> Letras Completo (A - O)</label>
             <label><input type="checkbox" checked onchange="toggleLayer('layer-titleblock', this)"> Cajetín de Título</label>
         </div>
     </div>
@@ -192,24 +192,38 @@
             <g id="layer-labels">
               <text x="-40" y="-40" class="vertex-label">A</text>
               
+              <text x="500" y="-40" class="vertex-label">E</text>
+              <text x="1000" y="-40" class="vertex-label">F</text>
+              
               <text x="1540" y="-40" class="vertex-label">B</text>
+              
+              <text x="1540" y="125" class="vertex-label">K</text>
+              <text x="1540" y="250" class="vertex-label">L</text>
+              <text x="1540" y="375" class="vertex-label">M</text>
+              <text x="1540" y="500" class="vertex-label">N</text>
+              <text x="1540" y="625" class="vertex-label">O</text>
               
               <text x="1540" y="790" class="vertex-label">C</text>
               
+              <text x="1000" y="790" class="vertex-label">J</text>
+              <text x="500" y="790" class="vertex-label">I</text>
+              
               <text x="-40" y="790" class="vertex-label">D</text>
+              
+              <text x="-40" y="500" class="vertex-label">H</text>
+              <text x="-40" y="250" class="vertex-label">G</text>
             </g>
           </g>
         
           <g id="layer-titleblock" transform="translate(100, 1920)">
             <rect x="0" y="0" width="2770" height="120" class="title-block" />
-            <text x="1385" y="55" class="title-text-main">PERÍMETRO ARQUITECTÓNICO</text>
+            <text x="1385" y="55" class="title-text-main">PERÍMETRO ARQUITECTÓNICO CON HITOS</text>
             <text x="1385" y="95" class="title-text-sub">PLANTA GENERAL • ESCALA 1:100 • FORMATO A4</text>
           </g>
         </svg>
     </div>
 
     <script>
-        // Función para cambiar de Modo Claro a Modo Oscuro
         function toggleTheme() {
             const body = document.body;
             const themeIcon = document.getElementById('theme-icon');
@@ -225,13 +239,17 @@
             }
         }
 
-        // Función para abrir/cerrar el menú desplegable de Capas
+        document.addEventListener('keydown', function(event) {
+            if (event.key.toLowerCase() === 'j') {
+                window.print();
+            }
+        });
+
         function toggleLayers() {
             const menu = document.getElementById('layer-menu');
             menu.classList.toggle('active');
         }
 
-        // Función para Ocultar/Mostrar elementos SVG individuales
         function toggleLayer(layerId, checkbox) {
             const layer = document.getElementById(layerId);
             if (checkbox.checked) {
