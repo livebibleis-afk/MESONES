@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano Arquitectónico 2D - Escala 1:100 (Actualizado)</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.5;
+            color: #1e293b;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .header-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: #ffffff;
+            padding: 30px 40px;
+            border-bottom: 4px solid #3b82f6;
+        }
+        .header-banner h1 {
+            margin: 0;
+            font-size: 22pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .header-banner p {
+            margin: 8px 0 0 0;
+            font-size: 11pt;
+            color: #93c5fd;
+            font-style: italic;
+        }
+        .content-body {
+            padding: 40px;
+        }
+        .specs-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: collapse;
+        }
+        .specs-row {
+            display: table-row;
+        }
+        .specs-cell {
+            display: table-cell;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            width: 25%;
+        }
+        .specs-cell.title {
+            font-weight: bold;
+            color: #334155;
+            background: #f1f5f9;
+        }
+        .blueprint-container {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        svg {
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #e2e8f0;
+            display: block;
+            margin: 0 auto;
+        }
+        .notes-section {
+            background-color: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 30px;
+        }
+        .notes-section h3 {
+            margin-top: 0;
+            color: #14532d;
+            font-size: 13pt;
+        }
+        .notes-section ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .notes-section li {
+            margin-bottom: 8px;
+            font-size: 10.5pt;
+            color: #166534;
+        }
+        .legend-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 6px;
+            vertical-align: middle;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>Diseño Arquitectónico 2D Digital</h1>
+        <p>Representación Gráfica Vectorial Estructurada a Escala 1:100 - Corrección Toma de Aire</p>
+    </div>
+
+    <div class="content-body">
+        <p>Plano técnico optimizado mediante gráficos vectoriales nativos (SVG). Se han unificado los perímetros exteriores y se ha condicionado el sector superior como un espacio abierto de ventilación.</p>
+
+        <div class="specs-grid">
+            <div class="specs-row">
+                <div class="specs-cell title">Escala Técnica</div>
+                <div class="specs-cell">1:100 (1cm = 1m)</div>
+                <div class="specs-cell title">Dimensión Total</div>
+                <div class="specs-cell">10.00 m x 6.60 m</div>
+            </div>
+            <div class="specs-row">
+                <div class="specs-cell title">Identificación Específica</div>
+                <div class="specs-cell">Sector "ah": Toma de Aire</div>
+                <div class="specs-cell title">Modificaciones</div>
+                <div class="specs-cell">Líneas de Vacío Estructural</div>
+            </div>
+        </div>
+
+        <div class="blueprint-container">
+            <svg width="850" height="580" viewBox="0 0 850 580" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                        <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+                        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
+                    </pattern>
+                    <marker id="tick" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+                        <line x1="0" y1="10" x2="10" y2="0" stroke="#dc2626" stroke-width="2"/>
+                    </marker>
+                </defs>
+
+                <rect width="850" height="580" fill="#ffffff"/>
+                <rect x="50" y="50" width="750" height="480" fill="url(#grid)" stroke="#cbd5e1" stroke-width="1"/>
+
+                <g stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,5">
+                    <line x1="479" y1="104" x2="696" y2="191.5" />
+                    <line x1="696" y1="104" x2="479" y2="191.5" />
+                </g>
+
+                <g stroke="#1e293b" stroke-width="8" fill="none" stroke-linecap="square">
+                    <path d="M 100 100 L 700 100 L 700 496 L 100 496 Z" />
+                </g>
+
+                <g stroke="#334155" stroke-width="6" fill="none" stroke-linecap="round">
+                    <line x1="273" y1="496" x2="273" y2="250" />
+                    <line x1="100" y1="250" x2="224" y2="250" />
+
+                    <line x1="475" y1="100" x2="475" y2="194.5" />
+                    <line x1="475" y1="194.5" x2="700" y2="194.5" />
+
+                    <line x1="549" y1="496" x2="549" y2="385.5" />
+                    <line x1="549" y1="385.5" x2="650" y2="385.5" /> 
+                </g>
+
+                <g stroke="#3b82f6" stroke-width="2" fill="none">
+                    <path d="M 224 250 A 49 49 0 0 0 273 299" stroke-dasharray="3,3" />
+                    <line x1="224" y1="250" x2="224" y2="299" stroke-width="3" />
+                </g>
+
+                <g stroke="#10b981" stroke-width="2" fill="none">
+                    <path d="M 650 385.5 A 50 50 0 0 0 700 335.5" stroke-dasharray="3,3" />
+                    <line x1="650" y1="385.5" x2="700" y2="335.5" stroke-width="3" />
+                </g>
+
+                <g stroke="#64748b" stroke-width="2" fill="none">
+                    <line x1="549" y1="330" x2="700" y2="330" />
+                    <line x1="549" y1="285" x2="700" y2="285" />
+                    <line x1="549" y1="240" x2="700" y2="240" />
+                </g>
+
+                <g font-family="Arial" font-size="14" font-weight="bold" fill="#0f172a">
+                    <text x="80" y="95">A</text>
+                    <text x="710" y="95">B</text>
+                    <text x="710" y="515">C</text>
+                    <text x="80" y="515">D</text>
+
+                    <text x="265" y="90">E</text>
+                    <text x="470" y="90">F</text>
+                    <text x="75" y="180">G</text>
+                    <text x="75" y="255">H</text>
+                    <text x="75" y="420">P</text>
+                    <text x="380" y="515">I</text>
+                    <text x="545" y="515">J</text>
+                    
+                    <text x="712" y="198">K</text>
+                    <text x="712" y="245">L</text>
+                    <text x="712" y="290">N</text>
+                    <text x="712" y="390">O</text>
+
+                    <text x="460" y="215" fill="#b91c1c">a</text>
+                    <text x="535" y="380" fill="#b91c1c">b</text>
+                    <text x="282" y="490" fill="#b91c1c">c</text>
+                    <text x="282" y="245" fill="#b91c1c">d</text>
+                    <text x="282" y="350" fill="#b91c1c">e</text>
+                    <text x="535" y="335" fill="#b91c1c">f</text>
+                    <text x="535" y="290" fill="#b91c1c">g</text>
+                    <text x="535" y="245" fill="#b91c1c">h</text>
+                </g>
+
+                <g font-family="Arial" font-size="12" font-weight="bold" fill="#475569" text-anchor="middle">
+                    <text x="186" y="380">CUARTO IZQUIERDO</text>
+                    <text x="590" y="152" fill="#1e3a8a">TOMA DE AIRE (ah)</text>
+                    <text x="630" y="450" fill="#065f46">CUARTO C</text>
+                    <text x="410" y="330" font-size="13" fill="#475569">ÁREA COMÚN / PASILLO</text>
+                </g>
+
+                <g stroke="#dc2626" stroke-width="1.5" fill="none" marker-start="url(#tick)" marker-end="url(#tick)">
+                    <line x1="100" y1="40" x2="475" y2="40" />
+                    <line x1="100" y1="20" x2="700" y2="20" />
+                    <line x1="40" y1="100" x2="40" y2="180" />
+                    <line x1="40" y1="180" x2="40" y2="250" />
+                    <line x1="273" y1="530" x2="549" y2="530" />
+                    <line x1="549" y1="530" x2="700" y2="530" />
+                    <line x1="100" y1="415" x2="273" y2="415" />
+                    <line x1="255" y1="250" x2="255" y2="496" />
+                </g>
+
+                <g font-family="Arial" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">
+                    <text x="287" y="36">7.50 m</text>
+                    <text x="400" y="16">Total: 10.00 m</text>
+                    <text x="25" y="145" transform="rotate(-90 25 145)">1.35 m</text>
+                    <text x="25" y="220" transform="rotate(-90 25 220)">3.57 m</text>
+                    <text x="411" y="525">JI: 3.37 m</text>
+                    <text x="625" y="525">CJ: 3.02 m</text>
+                    <text x="186" y="410">3.46 m</text>
+                    <text x="248" y="370" transform="rotate(-90 248 370)">4.92 m</text>
+                    <text x="590" y="125" font-size="10" fill="#1e3a8a">ah 2.43 m</text>
+                    <text x="460" y="150" font-size="10" transform="rotate(-90 460 150)">1.89 m</text>
+                </g>
+            </svg>
+        </div>
+
+        <div class="notes-section">
+            <h3>Notas de Diseño Técnico Incorporadas:</h3>
+            <ul>
+                <li><span class="legend-dot" style="background-color: #1e3a8a;"></span><strong>Ducto Abierto / Toma de Aire (ah):</strong> Representado bajo norma con líneas cruzadas discontinuas para denotar una apertura hacia el exterior (sin losa), garantizando iluminación y flujo de aire hacia los conectores.</li>
+                <li><span class="legend-dot" style="background-color: #10b981;"></span><strong>Circulación del Cuarto C:</strong> Se mantiene el vano libre de 0.85 m para su puerta independiente, asegurando que no interfiera con los escalones adyacentes.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
