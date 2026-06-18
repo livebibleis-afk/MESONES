@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano - Herramientas y Modo Oscuro</title>
+    <title>Plano - Vértices y Herramientas</title>
     <style>
         /* ==========================================
            VARIABLES DE TEMA (CLARO POR DEFECTO)
@@ -164,7 +164,7 @@
         </button>
         <div id="layer-menu">
             <label><input type="checkbox" checked onchange="toggleLayer('layer-perimeter', this)"> Perímetro Exterior</label>
-            <label><input type="checkbox" checked onchange="toggleLayer('layer-labels', this)"> Letras (A, B, C, D)</label>
+            <label><input type="checkbox" checked onchange="toggleLayer('layer-labels', this)"> Vértices (A, B, C, D)</label>
             <label><input type="checkbox" checked onchange="toggleLayer('layer-titleblock', this)"> Cajetín de Título</label>
         </div>
     </div>
@@ -172,11 +172,10 @@
     <div class="plano-container">
         <svg viewBox="0 0 2970 2100" xmlns="http://www.w3.org/2000/svg">
           <style>
-            /* Las clases ahora responden a las variables CSS de arriba */
             .bg { fill: var(--bg-svg); transition: fill 0.3s; }
             .room { fill: var(--bg-svg); transition: fill 0.3s; }
             .wall-ext { fill: none; stroke: var(--line-color); stroke-width: 8; stroke-linecap: square; stroke-linejoin: miter; transition: stroke 0.3s; }
-            .side-label { fill: var(--accent-color); font-family: sans-serif; font-size: 56px; font-weight: bold; text-anchor: middle; dominant-baseline: middle; transition: fill 0.3s; }
+            .vertex-label { fill: var(--accent-color); font-family: sans-serif; font-size: 56px; font-weight: bold; text-anchor: middle; dominant-baseline: middle; transition: fill 0.3s; }
             .title-block { fill: var(--bg-svg); stroke: var(--line-color); stroke-width: 4; transition: all 0.3s; }
             .title-text-main { fill: var(--text-main); font-family: sans-serif; font-size: 36px; font-weight: bold; text-anchor: middle; letter-spacing: 4px; transition: fill 0.3s; }
             .title-text-sub { fill: var(--text-sub); font-family: sans-serif; font-size: 20px; text-anchor: middle; letter-spacing: 2px; transition: fill 0.3s; }
@@ -191,10 +190,13 @@
             </g>
 
             <g id="layer-labels">
-              <text x="750" y="-60" class="side-label">A</text>
-              <text x="1560" y="375" class="side-label">B</text>
-              <text x="750" y="810" class="side-label">C</text>
-              <text x="-60" y="375" class="side-label">D</text>
+              <text x="-40" y="-40" class="vertex-label">A</text>
+              
+              <text x="1540" y="-40" class="vertex-label">B</text>
+              
+              <text x="1540" y="790" class="vertex-label">C</text>
+              
+              <text x="-40" y="790" class="vertex-label">D</text>
             </g>
           </g>
         
