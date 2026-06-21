@@ -69,8 +69,8 @@
             background: #f1f5f9;
         }
         .blueprint-container {
-            background: #f8fafc;
-            border: 2px dashed #cbd5e1;
+            background: #1e2124; /* Ajustado para el diseño CAD */
+            border: 2px solid #334155;
             border-radius: 8px;
             padding: 20px;
             text-align: center;
@@ -78,11 +78,10 @@
             overflow-x: auto;
         }
         svg {
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            background-color: #1e2124;
             display: block;
             margin: 0 auto;
+            border-radius: 4px;
         }
         .notes-section {
             background-color: #f0fdf4;
@@ -142,115 +141,120 @@
         </div>
 
         <div class="blueprint-container">
-            <svg width="850" height="580" viewBox="0 0 850 580" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="auto" style="font-family: 'Courier New', Courier, monospace;">
                 <defs>
-                    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                        <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-                        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
-                    </pattern>
-                    <marker id="tick" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
-                        <line x1="0" y1="10" x2="10" y2="0" stroke="#dc2626" stroke-width="2"/>
+                    <marker id="tick" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                        <line x1="5" y1="0" x2="5" y2="10" stroke="#ffffff" stroke-width="2" />
                     </marker>
                 </defs>
 
-                <rect width="850" height="580" fill="#ffffff"/>
-                <rect x="50" y="50" width="750" height="480" fill="url(#grid)" stroke="#cbd5e1" stroke-width="1"/>
+                <style>
+                    .wall { fill: none; stroke: #00ff00; stroke-width: 3; stroke-linecap: square; }
+                    .thin-wall { fill: none; stroke: #00ff00; stroke-width: 1.5; }
+                    .dim-line { fill: none; stroke: #ffffff; stroke-width: 1; marker-start: url(#tick); marker-end: url(#tick); }
+                    .dim-text { fill: #ffffff; font-size: 14px; text-anchor: middle; alignment-baseline: middle; }
+                    .dim-text-vert { fill: #ffffff; font-size: 14px; text-anchor: middle; alignment-baseline: middle; transform-origin: center; }
+                    .label { fill: #ffffff; font-size: 22px; text-anchor: middle; alignment-baseline: middle; letter-spacing: 1px; }
+                    .ui-element { fill: none; stroke: #888888; stroke-width: 1.5; }
+                    .ui-text { fill: #888888; font-size: 12px; font-family: sans-serif; text-anchor: middle; alignment-baseline: middle; }
+                    .ui-bg { fill: #333333; stroke: #555555; stroke-width: 1; }
+                </style>
 
-                <g stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,5">
-                    <line x1="479" y1="104" x2="696" y2="191.5" />
-                    <line x1="696" y1="104" x2="479" y2="191.5" />
+                <g transform="translate(1050, 50)">
+                    <circle cx="50" cy="50" r="40" class="ui-element" stroke-dasharray="4 4"/>
+                    <rect x="25" y="25" width="50" height="50" class="ui-bg" />
+                    <text x="50" y="50" class="ui-text" fill="#ffffff" font-weight="bold">TOP</text>
+                    <text x="50" y="15" class="ui-text">N</text>
+                    <text x="50" y="85" class="ui-text">S</text>
+                    <text x="90" y="50" class="ui-text">E</text>
+                    <text x="10" y="50" class="ui-text">W</text>
+                    <rect x="25" y="110" width="50" height="20" rx="3" class="ui-bg" />
+                    <text x="50" y="120" class="ui-text" font-size="10px">WCS</text>
                 </g>
 
-                <g stroke="#1e293b" stroke-width="8" fill="none" stroke-linecap="square">
-                    <path d="M 100 100 L 700 100 L 700 496 L 100 496 Z" />
+                <g class="wall">
+                    <rect x="50" y="50" width="900" height="750" />
+                    <line x1="450" y1="50" x2="450" y2="500" />
+                    <line x1="600" y1="50" x2="600" y2="250" />
+                    <line x1="750" y1="50" x2="750" y2="800" />
+                    <line x1="50" y1="400" x2="450" y2="400" />
+                    <line x1="450" y1="250" x2="750" y2="250" />
+                    <line x1="600" y1="150" x2="750" y2="150" />
+                    <line x1="450" y1="500" x2="750" y2="500" />
+                    <line x1="650" y1="250" x2="650" y2="500" />
+                    <line x1="50" y1="650" x2="750" y2="650" />
+                    <line x1="200" y1="400" x2="200" y2="650" />
+                    <line x1="350" y1="400" x2="350" y2="650" />
+                    <rect x="680" y="520" width="40" height="40" class="thin-wall" />
+                    <rect x="690" y="530" width="20" height="20" class="thin-wall" />
+                    <line x1="200" y1="650" x2="200" y2="800" />
+                    <line x1="550" y1="650" x2="550" y2="800" />
+                    <line x1="650" y1="650" x2="650" y2="800" />
+                    <line x1="750" y1="720" x2="950" y2="720" />
                 </g>
 
-                <g stroke="#334155" stroke-width="6" fill="none" stroke-linecap="round">
-                    <line x1="273" y1="496" x2="273" y2="250" />
-                    <line x1="100" y1="250" x2="224" y2="250" />
-
-                    <line x1="475" y1="100" x2="475" y2="194.5" />
-                    <line x1="475" y1="194.5" x2="700" y2="194.5" />
-
-                    <line x1="549" y1="496" x2="549" y2="385.5" />
-                    <line x1="549" y1="385.5" x2="650" y2="385.5" /> 
+                <g>
+                    <text x="250" y="225" class="label">Jardin</text>
+                    <text x="850" y="425" class="label">sala</text>
+                    <text x="550" y="375" class="label">cocina</text>
+                    <text x="125" y="525" class="label">D3</text>
+                    <text x="275" y="525" class="label">D2</text>
+                    <text x="500" y="525" class="label">D1</text>
+                    <text x="75" y="525" class="dim-text" font-weight="bold">D4</text>
+                    <text x="125" y="725" class="label">Baño</text>
+                    <text x="600" y="725" class="label" transform="rotate(-90, 600, 725)">Lavanderia</text>
+                    <text x="850" y="685" class="label">Pasillo</text>
+                    <text x="850" y="760" class="label">Almacen</text>
                 </g>
 
-                <g stroke="#3b82f6" stroke-width="2" fill="none">
-                    <path d="M 224 250 A 49 49 0 0 0 273 299" stroke-dasharray="3,3" />
-                    <line x1="224" y1="250" x2="224" y2="299" stroke-width="3" />
-                </g>
-
-                <g stroke="#10b981" stroke-width="2" fill="none">
-                    <path d="M 650 385.5 A 50 50 0 0 0 700 335.5" stroke-dasharray="3,3" />
-                    <line x1="650" y1="385.5" x2="700" y2="335.5" stroke-width="3" />
-                </g>
-
-                <g stroke="#64748b" stroke-width="2" fill="none">
-                    <line x1="549" y1="330" x2="700" y2="330" />
-                    <line x1="549" y1="285" x2="700" y2="285" />
-                    <line x1="549" y1="240" x2="700" y2="240" />
-                </g>
-
-                <g font-family="Arial" font-size="14" font-weight="bold" fill="#0f172a">
-                    <text x="80" y="95">A</text>
-                    <text x="710" y="95">B</text>
-                    <text x="710" y="515">C</text>
-                    <text x="80" y="515">D</text>
-
-                    <text x="265" y="90">E</text>
-                    <text x="470" y="90">F</text>
-                    <text x="75" y="180">G</text>
-                    <text x="75" y="255">H</text>
-                    <text x="75" y="420">P</text>
-                    <text x="380" y="515">I</text>
-                    <text x="545" y="515">J</text>
-                    
-                    <text x="712" y="198">K</text>
-                    <text x="712" y="245">L</text>
-                    <text x="712" y="290">N</text>
-                    <text x="712" y="390">O</text>
-
-                    <text x="460" y="215" fill="#b91c1c">a</text>
-                    <text x="535" y="380" fill="#b91c1c">b</text>
-                    <text x="282" y="490" fill="#b91c1c">c</text>
-                    <text x="282" y="245" fill="#b91c1c">d</text>
-                    <text x="282" y="350" fill="#b91c1c">e</text>
-                    <text x="535" y="335" fill="#b91c1c">f</text>
-                    <text x="535" y="290" fill="#b91c1c">g</text>
-                    <text x="535" y="245" fill="#b91c1c">h</text>
-                </g>
-
-                <g font-family="Arial" font-size="12" font-weight="bold" fill="#475569" text-anchor="middle">
-                    <text x="186" y="380">CUARTO IZQUIERDO</text>
-                    <text x="590" y="152" fill="#1e3a8a">TOMA DE AIRE (ah)</text>
-                    <text x="630" y="450" fill="#065f46">CUARTO C</text>
-                    <text x="410" y="330" font-size="13" fill="#475569">ÁREA COMÚN / PASILLO</text>
-                </g>
-
-                <g stroke="#dc2626" stroke-width="1.5" fill="none" marker-start="url(#tick)" marker-end="url(#tick)">
-                    <line x1="100" y1="40" x2="475" y2="40" />
-                    <line x1="100" y1="20" x2="700" y2="20" />
-                    <line x1="40" y1="100" x2="40" y2="180" />
-                    <line x1="40" y1="180" x2="40" y2="250" />
-                    <line x1="273" y1="530" x2="549" y2="530" />
-                    <line x1="549" y1="530" x2="700" y2="530" />
-                    <line x1="100" y1="415" x2="273" y2="415" />
-                    <line x1="255" y1="250" x2="255" y2="496" />
-                </g>
-
-                <g font-family="Arial" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">
-                    <text x="287" y="36">7.50 m</text>
-                    <text x="400" y="16">Total: 10.00 m</text>
-                    <text x="25" y="145" transform="rotate(-90 25 145)">1.35 m</text>
-                    <text x="25" y="220" transform="rotate(-90 25 220)">3.57 m</text>
-                    <text x="411" y="525">JI: 3.37 m</text>
-                    <text x="625" y="525">CJ: 3.02 m</text>
-                    <text x="186" y="410">3.46 m</text>
-                    <text x="248" y="370" transform="rotate(-90 248 370)">4.92 m</text>
-                    <text x="590" y="125" font-size="10" fill="#1e3a8a">ah 2.43 m</text>
-                    <text x="460" y="150" font-size="10" transform="rotate(-90 460 150)">1.89 m</text>
-                </g>
+                <line x1="450" y1="30" x2="600" y2="30" class="dim-line" />
+                <text x="525" y="20" class="dim-text">1.6700</text>
+                <line x1="600" y1="30" x2="750" y2="30" class="dim-line" />
+                <text x="675" y="20" class="dim-text">1.3500</text>
+                <line x1="450" y1="230" x2="750" y2="230" class="dim-line" />
+                <text x="600" y="220" class="dim-text">4.9200</text>
+                <line x1="430" y1="50" x2="430" y2="250" class="dim-line" />
+                <text x="420" y="150" class="dim-text-vert" transform="rotate(-90, 420, 150)">2.4800</text>
+                <line x1="770" y1="50" x2="770" y2="150" class="dim-line" />
+                <text x="780" y="100" class="dim-text-vert" transform="rotate(-90, 780, 100)">0.9800</text>
+                <line x1="970" y1="50" x2="970" y2="800" class="dim-line" />
+                <text x="985" y="425" class="dim-text-vert" transform="rotate(-90, 985, 425)">8.1500</text>
+                <line x1="450" y1="270" x2="650" y2="270" class="dim-line" />
+                <text x="550" y="260" class="dim-text">3.4200</text>
+                <line x1="450" y1="480" x2="650" y2="480" class="dim-line" />
+                <text x="550" y="470" class="dim-text">3.4700</text>
+                <line x1="670" y1="250" x2="670" y2="500" class="dim-line" />
+                <text x="685" y="375" class="dim-text-vert" transform="rotate(-90, 685, 375)">3.9100</text>
+                <line x1="430" y1="250" x2="430" y2="500" class="dim-line" />
+                <text x="420" y="375" class="dim-text-vert" transform="rotate(-90, 420, 375)">2.4400</text>
+                <line x1="50" y1="420" x2="200" y2="420" class="dim-line" />
+                <text x="125" y="410" class="dim-text">2.7900</text>
+                <line x1="200" y1="420" x2="350" y2="420" class="dim-line" />
+                <text x="275" y="410" class="dim-text">2.0000</text>
+                <line x1="350" y1="420" x2="750" y2="420" class="dim-line" />
+                <text x="550" y="410" class="dim-text">5.2000</text>
+                <line x1="30" y1="400" x2="30" y2="650" class="dim-line" />
+                <text x="20" y="525" class="dim-text-vert" transform="rotate(-90, 20, 525)">3.0100</text>
+                <line x1="370" y1="400" x2="370" y2="650" class="dim-line" />
+                <text x="385" y="525" class="dim-text-vert" transform="rotate(-90, 385, 525)">3.2100</text>
+                <line x1="730" y1="400" x2="730" y2="650" class="dim-line" />
+                <text x="720" y="525" class="dim-text-vert" transform="rotate(-90, 720, 525)">3.3900</text>
+                <line x1="50" y1="630" x2="125" y2="630" class="dim-line" />
+                <text x="87" y="620" class="dim-text">1.9000</text>
+                <line x1="125" y1="630" x2="200" y2="630" class="dim-line" />
+                <text x="162" y="620" class="dim-text">1.0200</text>
+                <line x1="200" y1="630" x2="350" y2="630" class="dim-line" />
+                <text x="275" y="620" class="dim-text">1.9100</text>
+                <line x1="30" y1="650" x2="30" y2="800" class="dim-line" />
+                <text x="20" y="725" class="dim-text-vert" transform="rotate(-90, 20, 725)">1.1200</text>
+                <line x1="550" y1="820" x2="650" y2="820" class="dim-line" />
+                <text x="600" y="835" class="dim-text">1.5200</text>
+                <line x1="750" y1="820" x2="950" y2="820" class="dim-line" />
+                <text x="850" y="835" class="dim-text">4.5500</text>
+                <line x1="970" y1="650" x2="970" y2="720" class="dim-line" />
+                <text x="985" y="685" class="dim-text-vert" transform="rotate(-90, 985, 685)">0.8400</text>
+                <line x1="970" y1="720" x2="970" y2="800" class="dim-line" />
+                <text x="985" y="760" class="dim-text-vert" transform="rotate(-90, 985, 760)">4.8500</text>
             </svg>
         </div>
 
