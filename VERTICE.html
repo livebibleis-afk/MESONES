@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano Arquitectónico 2D - Escala 1:100 (Alta Fidelidad)</title>
+    <title>Plano Arquitectónico 2D - Interactivo</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
         
-        /* Variables de temas (Claro por defecto) */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             line-height: 1.5;
@@ -20,7 +19,6 @@
             padding: 20px;
         }
         
-        /* Estilos del Modo Oscuro para la página */
         body.dark-mode {
             background-color: #0f172a;
             color: #cbd5e1;
@@ -31,7 +29,7 @@
             margin: 0 auto;
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
             border: 1px solid #e2e8f0;
             overflow: hidden;
         }
@@ -48,200 +46,72 @@
             border-bottom: 4px solid #3b82f6;
         }
         
-        .header-banner h1 {
-            margin: 0;
-            font-size: 22pt;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .header-banner p {
-            margin: 8px 0 0 0;
-            font-size: 11pt;
-            color: #93c5fd;
-            font-style: italic;
-        }
+        .header-banner h1 { margin: 0; font-size: 22pt; font-weight: 700; text-transform: uppercase; }
+        .header-banner p { margin: 8px 0 0 0; font-size: 11pt; color: #93c5fd; font-style: italic; }
 
-        .content-body {
-            padding: 40px;
-        }
+        .content-body { padding: 40px; }
 
-        /* Barra de herramientas / Botones de acción */
-        .action-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
+        /* Botones */
+        .action-bar { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 18px;
-            font-size: 10.5pt;
-            font-weight: 600;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 10px 18px; font-size: 10.5pt; font-weight: 600;
+            border-radius: 6px; border: none; cursor: pointer; text-transform: uppercase;
         }
-        .btn-print {
-            background-color: #2563eb;
-            color: #ffffff;
-        }
+        .btn-print { background-color: #2563eb; color: #ffffff; }
         .btn-print:hover { background-color: #1d4ed8; }
         
-        .btn-theme {
-            background-color: #64748b;
-            color: #ffffff;
-        }
+        .btn-theme { background-color: #64748b; color: #ffffff; }
         .btn-theme:hover { background-color: #475569; }
-        
-        body.dark-mode .btn-theme {
-            background-color: #f1f5f9;
-            color: #0f172a;
-        }
-        body.dark-mode .btn-theme:hover { background-color: #e2e8f0; }
+        body.dark-mode .btn-theme { background-color: #f1f5f9; color: #0f172a; }
 
-        /* Cuadrícula de Especificaciones */
-        .specs-grid {
-            display: table;
-            width: 100%;
-            margin-bottom: 30px;
-            border-collapse: collapse;
-        }
-        .specs-row {
-            display: table-row;
-        }
-        .specs-cell {
-            display: table-cell;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-            background: #f8fafc;
-            width: 25%;
-        }
-        body.dark-mode .specs-cell {
-            background: #1e293b;
-            border-color: #334155;
-            color: #cbd5e1;
-        }
-        .specs-cell.title {
-            font-weight: bold;
-            color: #334155;
-            background: #f1f5f9;
-        }
-        body.dark-mode .specs-cell.title {
-            background: #0f172a;
-            color: #ffffff;
+        .btn-edit { background-color: #10b981; color: #ffffff; transition: all 0.2s; }
+        .btn-edit:hover { background-color: #059669; }
+        .btn-edit.active { background-color: #ef4444; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        /* Contenedor del plano */
+        .specs-grid { display: table; width: 100%; margin-bottom: 30px; border-collapse: collapse; }
+        .specs-row { display: table-row; }
+        .specs-cell { display: table-cell; padding: 15px; border: 1px solid #e2e8f0; background: #f8fafc; width: 25%; }
+        body.dark-mode .specs-cell { background: #1e293b; border-color: #334155; }
+        .specs-cell.title { font-weight: bold; color: #334155; background: #f1f5f9; }
+        body.dark-mode .specs-cell.title { background: #0f172a; color: #ffffff; }
+
         .blueprint-container {
-            background: #f1f5f9;
-            border: 2px dashed #cbd5e1;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 30px;
-            overflow-x: auto;
+            background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 8px;
+            padding: 20px; text-align: center; margin-bottom: 30px; overflow-x: auto;
+            position: relative;
         }
-        body.dark-mode .blueprint-container {
-            background: #0f172a;
-            border-color: #475569;
-        }
+        body.dark-mode .blueprint-container { background: #0f172a; border-color: #475569; }
 
         svg {
-            background-color: #ffffff; /* Fondo blanco del plano garantizado siempre */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #cbd5e1;
-            display: block;
-            margin: 0 auto;
-            border-radius: 4px;
+            background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #cbd5e1; display: block; margin: 0 auto; border-radius: 4px;
         }
 
-        /* Notas del diseño */
-        .notes-section {
-            background-color: #f0fdf4;
-            border-left: 5px solid #22c55e;
-            padding: 20px;
-            border-radius: 4px;
-            margin-top: 30px;
-        }
-        body.dark-mode .notes-section {
-            background-color: #064e3b;
-            border-left-color: #10b981;
-        }
-        .notes-section h3 {
-            margin-top: 0;
-            color: #14532d;
-            font-size: 13pt;
-        }
-        body.dark-mode .notes-section h3 {
-            color: #a7f3d0;
-        }
-        .notes-section ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .notes-section li {
-            margin-bottom: 8px;
-            font-size: 10.5pt;
-            color: #166534;
-        }
-        body.dark-mode .notes-section li {
-            color: #d1fae5;
-        }
-        .legend-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin-right: 6px;
-            vertical-align: middle;
-            border-radius: 2px;
+        /* --- CLASES DE EDICIÓN --- */
+        .editing-mode svg * { cursor: pointer !important; }
+        .editing-mode svg *:hover { opacity: 0.6; }
+        .editing-mode svg .selected-element {
+            stroke: #3b82f6 !important;
+            stroke-width: 4px !important;
+            fill: #eff6ff !important;
+            filter: drop-shadow(0 0 3px #3b82f6);
         }
 
-        /* ========================================= */
-        /* OPTIMIZACIÓN ESTRICTA PARA IMPRESIÓN      */
-        /* ========================================= */
+        /* Impresión */
         @media print {
-            /* Sugerir orientación horizontal a la impresora */
             @page { size: landscape; margin: 1cm; }
-            
-            body { 
-                background-color: #ffffff; 
-                color: #000000; 
-                padding: 0; 
-                margin: 0;
-            }
-            
-            /* Ocultar absolutamente todo excepto el plano */
-            .header-banner, 
-            .action-bar, 
-            .intro-text, 
-            .specs-grid, 
-            .notes-section { 
-                display: none !important; 
-            }
-            
-            /* Eliminar bordes, sombras y paddings de los contenedores principales */
-            .main-container, 
-            .content-body, 
-            .blueprint-container { 
-                border: none !important; 
-                box-shadow: none !important; 
-                padding: 0 !important; 
-                margin: 0 !important;
-                background: transparent !important;
-                width: 100% !important;
-            }
-            
-            /* Ajustar el SVG para que ocupe todo el ancho disponible limpio */
-            svg { 
-                box-shadow: none !important; 
-                border: 1px solid #000000 !important; 
-                width: 100% !important;
-                height: auto !important;
-            }
+            body { background-color: #ffffff; color: #000000; padding: 0; margin: 0; }
+            .header-banner, .action-bar, .specs-grid { display: none !important; }
+            .main-container, .blueprint-container { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; background: transparent !important; }
+            svg { box-shadow: none !important; border: 1px solid #000000 !important; width: 100% !important; height: auto !important; }
+            .selected-element { stroke: inherit !important; stroke-width: inherit !important; filter: none !important; }
         }
     </style>
 </head>
@@ -250,34 +120,27 @@
 <div class="main-container">
     <div class="header-banner">
         <h1>Diseño Arquitectónico 2D Digital</h1>
-        <p>Representación Gráfica Vectorial Estructurada a Escala 1:100 - Visualización CAD Optimizada</p>
+        <p>Representación Gráfica Vectorial Estructurada a Escala 1:100</p>
     </div>
 
     <div class="content-body">
         <div class="action-bar">
-            <button class="btn btn-print" onclick="printBlueprint()">🖨️ Imprimir Plano</button>
+            <button class="btn btn-print" onclick="printBlueprint()">🖨️ Imprimir</button>
             <button class="btn btn-theme" id="themeBtn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
+            <button class="btn btn-edit" id="editBtn" onclick="toggleEditMode()">✏️ Activar Edición</button>
         </div>
-
-        <p class="intro-text">Plano técnico optimizado mediante gráficos vectoriales nativos (SVG) con fondo de alta visibilidad para impresión y revisión de cotas métricas.</p>
 
         <div class="specs-grid">
             <div class="specs-row">
-                <div class="specs-cell title">Escala Técnica</div>
-                <div class="specs-cell">1:100 (1cm = 1m)</div>
-                <div class="specs-cell title">Dimensión Total</div>
-                <div class="specs-cell">10.00 m x 6.60 m</div>
-            </div>
-            <div class="specs-row">
-                <div class="specs-cell title">Configuración</div>
-                <div class="specs-cell">Fondo de Plano Alto Contraste</div>
-                <div class="specs-cell title">Delineación</div>
-                <div class="specs-cell">Muros Estructurales Sólidos</div>
+                <div class="specs-cell title">Estado</div>
+                <div class="specs-cell" id="status-text">Visualización (Solo Lectura)</div>
+                <div class="specs-cell title">Instrucciones</div>
+                <div class="specs-cell" id="instruction-text">Activa la edición para modificar.</div>
             </div>
         </div>
 
-        <div class="blueprint-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="auto" style="font-family: 'Courier New', Courier, monospace;">
+        <div class="blueprint-container" id="bp-container">
+            <svg id="blueprint-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="auto" style="font-family: 'Courier New', Courier, monospace;">
                 <defs>
                     <marker id="tick" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                         <line x1="5" y1="0" x2="5" y2="10" stroke="#dc2626" stroke-width="2" />
@@ -290,25 +153,10 @@
                     .dim-line { fill: none; stroke: #dc2626; stroke-width: 1.2; marker-start: url(#tick); marker-end: url(#tick); }
                     .dim-text { fill: #dc2626; font-size: 14px; font-weight: bold; text-anchor: middle; alignment-baseline: middle; }
                     .dim-text-vert { fill: #dc2626; font-size: 14px; font-weight: bold; text-anchor: middle; alignment-baseline: middle; transform-origin: center; }
-                    .label { fill: #0f172a; font-size: 22px; font-weight: bold; text-anchor: middle; alignment-baseline: middle; letter-spacing: 1px; }
-                    .ui-element { fill: none; stroke: #94a3b8; stroke-width: 1.5; }
-                    .ui-text { fill: #475569; font-size: 12px; font-family: sans-serif; text-anchor: middle; alignment-baseline: middle; }
-                    .ui-bg { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1; }
+                    .label { fill: #0f172a; font-size: 22px; font-weight: bold; text-anchor: middle; alignment-baseline: middle; letter-spacing: 1px; pointer-events: auto;}
                 </style>
 
-                <rect width="1200" height="900" fill="#ffffff" />
-
-                <g transform="translate(1050, 50)">
-                    <circle cx="50" cy="50" r="40" class="ui-element" stroke-dasharray="4 4"/>
-                    <rect x="25" y="25" width="50" height="50" class="ui-bg" />
-                    <text x="50" y="50" class="ui-text" fill="#0f172a" font-weight="bold">TOP</text>
-                    <text x="50" y="15" class="ui-text">N</text>
-                    <text x="50" y="85" class="ui-text">S</text>
-                    <text x="90" y="50" class="ui-text">E</text>
-                    <text x="10" y="50" class="ui-text">W</text>
-                    <rect x="25" y="110" width="50" height="20" rx="3" class="ui-bg" />
-                    <text x="50" y="120" class="ui-text" font-size="10px">WCS</text>
-                </g>
+                <rect width="1200" height="900" fill="#ffffff" id="bg-rect" />
 
                 <g class="wall">
                     <rect x="50" y="50" width="900" height="750" />
@@ -345,83 +193,103 @@
                     <text x="850" y="760" class="label">Almacen</text>
                 </g>
 
-                <line x1="450" y1="30" x2="600" y2="30" class="dim-line" />
-                <text x="525" y="20" class="dim-text">1.6700</text>
-                <line x1="600" y1="30" x2="750" y2="30" class="dim-line" />
-                <text x="675" y="20" class="dim-text">1.3500</text>
-                <line x1="450" y1="230" x2="750" y2="230" class="dim-line" />
-                <text x="600" y="220" class="dim-text">4.9200</text>
-                <line x1="430" y1="50" x2="430" y2="250" class="dim-line" />
-                <text x="420" y="150" class="dim-text-vert" transform="rotate(-90, 420, 150)">2.4800</text>
-                <line x1="770" y1="50" x2="770" y2="150" class="dim-line" />
-                <text x="780" y="100" class="dim-text-vert" transform="rotate(-90, 780, 100)">0.9800</text>
-                <line x1="970" y1="50" x2="970" y2="800" class="dim-line" />
-                <text x="985" y="425" class="dim-text-vert" transform="rotate(-90, 985, 425)">8.1500</text>
-                <line x1="450" y1="270" x2="650" y2="270" class="dim-line" />
-                <text x="550" y="260" class="dim-text">3.4200</text>
-                <line x1="450" y1="480" x2="650" y2="480" class="dim-line" />
-                <text x="550" y="470" class="dim-text">3.4700</text>
-                <line x1="670" y1="250" x2="670" y2="500" class="dim-line" />
-                <text x="685" y="375" class="dim-text-vert" transform="rotate(-90, 685, 375)">3.9100</text>
-                <line x1="430" y1="250" x2="430" y2="500" class="dim-line" />
-                <text x="420" y="375" class="dim-text-vert" transform="rotate(-90, 420, 375)">2.4400</text>
-                <line x1="50" y1="420" x2="200" y2="420" class="dim-line" />
-                <text x="125" y="410" class="dim-text">2.7900</text>
-                <line x1="200" y1="420" x2="350" y2="420" class="dim-line" />
-                <text x="275" y="410" class="dim-text">2.0000</text>
-                <line x1="350" y1="420" x2="750" y2="420" class="dim-line" />
-                <text x="550" y="410" class="dim-text">5.2000</text>
-                <line x1="30" y1="400" x2="30" y2="650" class="dim-line" />
-                <text x="20" y="525" class="dim-text-vert" transform="rotate(-90, 20, 525)">3.0100</text>
-                <line x1="370" y1="400" x2="370" y2="650" class="dim-line" />
-                <text x="385" y="525" class="dim-text-vert" transform="rotate(-90, 385, 525)">3.2100</text>
-                <line x1="730" y1="400" x2="730" y2="650" class="dim-line" />
-                <text x="720" y="525" class="dim-text-vert" transform="rotate(-90, 720, 525)">3.3900</text>
-                <line x1="50" y1="630" x2="125" y2="630" class="dim-line" />
-                <text x="87" y="620" class="dim-text">1.9000</text>
-                <line x1="125" y1="630" x2="200" y2="630" class="dim-line" />
-                <text x="162" y="620" class="dim-text">1.0200</text>
-                <line x1="200" y1="630" x2="350" y2="630" class="dim-line" />
-                <text x="275" y="620" class="dim-text">1.9100</text>
-                <line x1="30" y1="650" x2="30" y2="800" class="dim-line" />
-                <text x="20" y="725" class="dim-text-vert" transform="rotate(-90, 20, 725)">1.1200</text>
-                <line x1="550" y1="820" x2="650" y2="820" class="dim-line" />
-                <text x="600" y="835" class="dim-text">1.5200</text>
-                <line x1="750" y1="820" x2="950" y2="820" class="dim-line" />
-                <text x="850" y="835" class="dim-text">4.5500</text>
-                <line x1="970" y1="650" x2="970" y2="720" class="dim-line" />
-                <text x="985" y="685" class="dim-text-vert" transform="rotate(-90, 985, 685)">0.8400</text>
-                <line x1="970" y1="720" x2="970" y2="800" class="dim-line" />
-                <text x="985" y="760" class="dim-text-vert" transform="rotate(-90, 985, 760)">4.8500</text>
+                <g>
+                    <line x1="450" y1="30" x2="600" y2="30" class="dim-line" />
+                    <text x="525" y="20" class="dim-text">1.6700</text>
+                    <line x1="600" y1="30" x2="750" y2="30" class="dim-line" />
+                    <text x="675" y="20" class="dim-text">1.3500</text>
+                    <line x1="450" y1="230" x2="750" y2="230" class="dim-line" />
+                    <text x="600" y="220" class="dim-text">4.9200</text>
+                    <line x1="430" y1="50" x2="430" y2="250" class="dim-line" />
+                    <text x="420" y="150" class="dim-text-vert" transform="rotate(-90, 420, 150)">2.4800</text>
+                    <line x1="770" y1="50" x2="770" y2="150" class="dim-line" />
+                    <text x="780" y="100" class="dim-text-vert" transform="rotate(-90, 780, 100)">0.9800</text>
+                    <line x1="970" y1="50" x2="970" y2="800" class="dim-line" />
+                    <text x="985" y="425" class="dim-text-vert" transform="rotate(-90, 985, 425)">8.1500</text>
+                </g>
             </svg>
-        </div>
-
-        <div class="notes-section">
-            <h3>Notas de Diseño Técnico Incorporadas:</h3>
-            <ul>
-                <li><span class="legend-dot" style="background-color: #1e3a8a;"></span><strong>Ducto Abierto / Toma de Aire (ah):</strong> Representado bajo norma con líneas cruzadas discontinuas para denotar una apertura hacia el exterior (sin losa), garantizando iluminación y flujo de aire hacia los conectores.</li>
-                <li><span class="legend-dot" style="background-color: #10b981;"></span><strong>Circulación del Cuarto C:</strong> Se mantiene el vano libre de 0.85 m para su puerta independiente, asegurando que no interfiera con los escalones adyacentes.</li>
-            </ul>
         </div>
     </div>
 </div>
 
 <script>
+    // --- LÓGICA DE TEMA Y VISUALIZACIÓN ---
     function toggleDarkMode() {
         const body = document.body;
         const btn = document.getElementById('themeBtn');
         body.classList.toggle('dark-mode');
-        
-        if (body.classList.contains('dark-mode')) {
-            btn.innerHTML = '☀️ Modo Claro';
-        } else {
-            btn.innerHTML = '🌙 Modo Oscuro';
-        }
+        btn.innerHTML = body.classList.contains('dark-mode') ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
     }
 
     function printBlueprint() {
+        // Limpiar selección antes de imprimir
+        if (selectedElement) clearSelection();
         window.print();
     }
+
+    // --- LÓGICA DE EDICIÓN ---
+    let isEditMode = false;
+    let selectedElement = null;
+
+    function toggleEditMode() {
+        const bpContainer = document.getElementById('bp-container');
+        const btn = document.getElementById('editBtn');
+        const statusText = document.getElementById('status-text');
+        const instructionText = document.getElementById('instruction-text');
+        
+        isEditMode = !isEditMode;
+        
+        if (isEditMode) {
+            bpContainer.classList.add('editing-mode');
+            btn.innerHTML = '💾 Guardar Cambios';
+            btn.classList.add('active');
+            statusText.innerHTML = '<strong style="color: #ef4444;">Editando...</strong>';
+            instructionText.innerText = 'Haz clic en un elemento para seleccionarlo y presiona "Suprimir" para borrarlo.';
+        } else {
+            bpContainer.classList.remove('editing-mode');
+            btn.innerHTML = '✏️ Activar Edición';
+            btn.classList.remove('active');
+            statusText.innerText = 'Visualización (Solo Lectura)';
+            instructionText.innerText = 'Activa la edición para modificar.';
+            clearSelection();
+        }
+    }
+
+    // Manejar clics dentro del SVG
+    document.getElementById('blueprint-svg').addEventListener('click', function(e) {
+        if (!isEditMode) return;
+        
+        // Evitar seleccionar el fondo blanco o el SVG completo
+        if (e.target.id === 'blueprint-svg' || e.target.id === 'bg-rect' || e.target.tagName === 'g') {
+            clearSelection();
+            return;
+        }
+
+        e.stopPropagation(); // Evitar que el clic llegue al fondo
+        clearSelection(); // Limpiar anterior
+
+        selectedElement = e.target;
+        selectedElement.classList.add('selected-element');
+    });
+
+    // Limpiar elemento seleccionado
+    function clearSelection() {
+        if (selectedElement) {
+            selectedElement.classList.remove('selected-element');
+            selectedElement = null;
+        }
+    }
+
+    // Escuchar la tecla "Suprimir" o "Backspace" para borrar
+    document.addEventListener('keydown', function(e) {
+        if (isEditMode && selectedElement) {
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                e.preventDefault(); // Prevenir comportamientos raros del navegador
+                selectedElement.remove();
+                selectedElement = null;
+            }
+        }
+    });
 </script>
 
 </body>
