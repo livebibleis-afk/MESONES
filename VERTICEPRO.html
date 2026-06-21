@@ -200,13 +200,48 @@
             border-radius: 2px;
         }
 
-        /* Optimización para Impresión */
+        /* ========================================= */
+        /* OPTIMIZACIÓN ESTRICTA PARA IMPRESIÓN      */
+        /* ========================================= */
         @media print {
-            body { background-color: #ffffff; color: #000000; padding: 0; }
-            .action-bar, .btn, .header-banner p { display: none !important; }
-            .main-container { border: none; box-shadow: none; }
-            .blueprint-container { background: transparent; border: none; padding: 0; }
-            svg { box-shadow: none; border: 1px solid #000000; }
+            /* Sugerir orientación horizontal a la impresora */
+            @page { size: landscape; margin: 1cm; }
+            
+            body { 
+                background-color: #ffffff; 
+                color: #000000; 
+                padding: 0; 
+                margin: 0;
+            }
+            
+            /* Ocultar absolutamente todo excepto el plano */
+            .header-banner, 
+            .action-bar, 
+            .intro-text, 
+            .specs-grid, 
+            .notes-section { 
+                display: none !important; 
+            }
+            
+            /* Eliminar bordes, sombras y paddings de los contenedores principales */
+            .main-container, 
+            .content-body, 
+            .blueprint-container { 
+                border: none !important; 
+                box-shadow: none !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                background: transparent !important;
+                width: 100% !important;
+            }
+            
+            /* Ajustar el SVG para que ocupe todo el ancho disponible limpio */
+            svg { 
+                box-shadow: none !important; 
+                border: 1px solid #000000 !important; 
+                width: 100% !important;
+                height: auto !important;
+            }
         }
     </style>
 </head>
@@ -224,7 +259,7 @@
             <button class="btn btn-theme" id="themeBtn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
         </div>
 
-        <p>Plano técnico optimizado mediante gráficos vectoriales nativos (SVG) con fondo de alta visibilidad para impresión y revisión de cotas métricas.</p>
+        <p class="intro-text">Plano técnico optimizado mediante gráficos vectoriales nativos (SVG) con fondo de alta visibilidad para impresión y revisión de cotas métricas.</p>
 
         <div class="specs-grid">
             <div class="specs-row">
