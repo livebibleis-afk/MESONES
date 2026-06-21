@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano Arquitectónico 2D - Escala 1:100 (Actualizado)</title>
+    <title>Plano Arquitectónico 2D - Escala 1:100 (Alta Fidelidad)</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
+        
+        /* Variables de temas (Claro por defecto) */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             line-height: 1.5;
@@ -16,6 +19,13 @@
             margin: 0;
             padding: 20px;
         }
+        
+        /* Estilos del Modo Oscuro para la página */
+        body.dark-mode {
+            background-color: #0f172a;
+            color: #cbd5e1;
+        }
+
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
@@ -25,12 +35,19 @@
             border: 1px solid #e2e8f0;
             overflow: hidden;
         }
+        body.dark-mode .main-container {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
         .header-banner {
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
             color: #ffffff;
             padding: 30px 40px;
             border-bottom: 4px solid #3b82f6;
         }
+        
         .header-banner h1 {
             margin: 0;
             font-size: 22pt;
@@ -44,9 +61,49 @@
             color: #93c5fd;
             font-style: italic;
         }
+
         .content-body {
             padding: 40px;
         }
+
+        /* Barra de herramientas / Botones de acción */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            font-size: 10.5pt;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-print {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        .btn-print:hover { background-color: #1d4ed8; }
+        
+        .btn-theme {
+            background-color: #64748b;
+            color: #ffffff;
+        }
+        .btn-theme:hover { background-color: #475569; }
+        
+        body.dark-mode .btn-theme {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        body.dark-mode .btn-theme:hover { background-color: #e2e8f0; }
+
+        /* Cuadrícula de Especificaciones */
         .specs-grid {
             display: table;
             width: 100%;
@@ -63,26 +120,46 @@
             background: #f8fafc;
             width: 25%;
         }
+        body.dark-mode .specs-cell {
+            background: #1e293b;
+            border-color: #334155;
+            color: #cbd5e1;
+        }
         .specs-cell.title {
             font-weight: bold;
             color: #334155;
             background: #f1f5f9;
         }
+        body.dark-mode .specs-cell.title {
+            background: #0f172a;
+            color: #ffffff;
+        }
+
+        /* Contenedor del plano */
         .blueprint-container {
-            background: #1e2124; /* Ajustado para el diseño CAD */
-            border: 2px solid #334155;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
             border-radius: 8px;
             padding: 20px;
             text-align: center;
             margin-bottom: 30px;
             overflow-x: auto;
         }
+        body.dark-mode .blueprint-container {
+            background: #0f172a;
+            border-color: #475569;
+        }
+
         svg {
-            background-color: #1e2124;
+            background-color: #ffffff; /* Fondo blanco del plano garantizado siempre */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #cbd5e1;
             display: block;
             margin: 0 auto;
             border-radius: 4px;
         }
+
+        /* Notas del diseño */
         .notes-section {
             background-color: #f0fdf4;
             border-left: 5px solid #22c55e;
@@ -90,10 +167,17 @@
             border-radius: 4px;
             margin-top: 30px;
         }
+        body.dark-mode .notes-section {
+            background-color: #064e3b;
+            border-left-color: #10b981;
+        }
         .notes-section h3 {
             margin-top: 0;
             color: #14532d;
             font-size: 13pt;
+        }
+        body.dark-mode .notes-section h3 {
+            color: #a7f3d0;
         }
         .notes-section ul {
             margin: 0;
@@ -104,6 +188,9 @@
             font-size: 10.5pt;
             color: #166534;
         }
+        body.dark-mode .notes-section li {
+            color: #d1fae5;
+        }
         .legend-dot {
             display: inline-block;
             width: 12px;
@@ -112,6 +199,15 @@
             vertical-align: middle;
             border-radius: 2px;
         }
+
+        /* Optimización para Impresión */
+        @media print {
+            body { background-color: #ffffff; color: #000000; padding: 0; }
+            .action-bar, .btn, .header-banner p { display: none !important; }
+            .main-container { border: none; box-shadow: none; }
+            .blueprint-container { background: transparent; border: none; padding: 0; }
+            svg { box-shadow: none; border: 1px solid #000000; }
+        }
     </style>
 </head>
 <body>
@@ -119,11 +215,16 @@
 <div class="main-container">
     <div class="header-banner">
         <h1>Diseño Arquitectónico 2D Digital</h1>
-        <p>Representación Gráfica Vectorial Estructurada a Escala 1:100 - Corrección Toma de Aire</p>
+        <p>Representación Gráfica Vectorial Estructurada a Escala 1:100 - Visualización CAD Optimizada</p>
     </div>
 
     <div class="content-body">
-        <p>Plano técnico optimizado mediante gráficos vectoriales nativos (SVG). Se han unificado los perímetros exteriores y se ha condicionado el sector superior como un espacio abierto de ventilación.</p>
+        <div class="action-bar">
+            <button class="btn btn-print" onclick="printBlueprint()">🖨️ Imprimir Plano</button>
+            <button class="btn btn-theme" id="themeBtn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
+        </div>
+
+        <p>Plano técnico optimizado mediante gráficos vectoriales nativos (SVG) con fondo de alta visibilidad para impresión y revisión de cotas métricas.</p>
 
         <div class="specs-grid">
             <div class="specs-row">
@@ -133,10 +234,10 @@
                 <div class="specs-cell">10.00 m x 6.60 m</div>
             </div>
             <div class="specs-row">
-                <div class="specs-cell title">Identificación Específica</div>
-                <div class="specs-cell">Sector "ah": Toma de Aire</div>
-                <div class="specs-cell title">Modificaciones</div>
-                <div class="specs-cell">Líneas de Vacío Estructural</div>
+                <div class="specs-cell title">Configuración</div>
+                <div class="specs-cell">Fondo de Plano Alto Contraste</div>
+                <div class="specs-cell title">Delineación</div>
+                <div class="specs-cell">Muros Estructurales Sólidos</div>
             </div>
         </div>
 
@@ -144,26 +245,28 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="auto" style="font-family: 'Courier New', Courier, monospace;">
                 <defs>
                     <marker id="tick" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                        <line x1="5" y1="0" x2="5" y2="10" stroke="#ffffff" stroke-width="2" />
+                        <line x1="5" y1="0" x2="5" y2="10" stroke="#dc2626" stroke-width="2" />
                     </marker>
                 </defs>
 
                 <style>
-                    .wall { fill: none; stroke: #00ff00; stroke-width: 3; stroke-linecap: square; }
-                    .thin-wall { fill: none; stroke: #00ff00; stroke-width: 1.5; }
-                    .dim-line { fill: none; stroke: #ffffff; stroke-width: 1; marker-start: url(#tick); marker-end: url(#tick); }
-                    .dim-text { fill: #ffffff; font-size: 14px; text-anchor: middle; alignment-baseline: middle; }
-                    .dim-text-vert { fill: #ffffff; font-size: 14px; text-anchor: middle; alignment-baseline: middle; transform-origin: center; }
-                    .label { fill: #ffffff; font-size: 22px; text-anchor: middle; alignment-baseline: middle; letter-spacing: 1px; }
-                    .ui-element { fill: none; stroke: #888888; stroke-width: 1.5; }
-                    .ui-text { fill: #888888; font-size: 12px; font-family: sans-serif; text-anchor: middle; alignment-baseline: middle; }
-                    .ui-bg { fill: #333333; stroke: #555555; stroke-width: 1; }
+                    .wall { fill: none; stroke: #1e293b; stroke-width: 3.5; stroke-linecap: square; }
+                    .thin-wall { fill: none; stroke: #1e293b; stroke-width: 1.5; }
+                    .dim-line { fill: none; stroke: #dc2626; stroke-width: 1.2; marker-start: url(#tick); marker-end: url(#tick); }
+                    .dim-text { fill: #dc2626; font-size: 14px; font-weight: bold; text-anchor: middle; alignment-baseline: middle; }
+                    .dim-text-vert { fill: #dc2626; font-size: 14px; font-weight: bold; text-anchor: middle; alignment-baseline: middle; transform-origin: center; }
+                    .label { fill: #0f172a; font-size: 22px; font-weight: bold; text-anchor: middle; alignment-baseline: middle; letter-spacing: 1px; }
+                    .ui-element { fill: none; stroke: #94a3b8; stroke-width: 1.5; }
+                    .ui-text { fill: #475569; font-size: 12px; font-family: sans-serif; text-anchor: middle; alignment-baseline: middle; }
+                    .ui-bg { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1; }
                 </style>
+
+                <rect width="1200" height="900" fill="#ffffff" />
 
                 <g transform="translate(1050, 50)">
                     <circle cx="50" cy="50" r="40" class="ui-element" stroke-dasharray="4 4"/>
                     <rect x="25" y="25" width="50" height="50" class="ui-bg" />
-                    <text x="50" y="50" class="ui-text" fill="#ffffff" font-weight="bold">TOP</text>
+                    <text x="50" y="50" class="ui-text" fill="#0f172a" font-weight="bold">TOP</text>
                     <text x="50" y="15" class="ui-text">N</text>
                     <text x="50" y="85" class="ui-text">S</text>
                     <text x="90" y="50" class="ui-text">E</text>
@@ -200,7 +303,7 @@
                     <text x="125" y="525" class="label">D3</text>
                     <text x="275" y="525" class="label">D2</text>
                     <text x="500" y="525" class="label">D1</text>
-                    <text x="75" y="525" class="dim-text" font-weight="bold">D4</text>
+                    <text x="75" y="525" class="dim-text" font-size="16px">D4</text>
                     <text x="125" y="725" class="label">Baño</text>
                     <text x="600" y="725" class="label" transform="rotate(-90, 600, 725)">Lavanderia</text>
                     <text x="850" y="685" class="label">Pasillo</text>
@@ -267,6 +370,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    function toggleDarkMode() {
+        const body = document.body;
+        const btn = document.getElementById('themeBtn');
+        body.classList.toggle('dark-mode');
+        
+        if (body.classList.contains('dark-mode')) {
+            btn.innerHTML = '☀️ Modo Claro';
+        } else {
+            btn.innerHTML = '🌙 Modo Oscuro';
+        }
+    }
+
+    function printBlueprint() {
+        window.print();
+    }
+</script>
 
 </body>
 </html>
