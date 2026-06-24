@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Materiales para Contrapiso</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e67e22;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator-container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .input-row .form-group {
+            flex: 1;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1a252f;
+        }
+
+        .results-section {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #edf2f7;
+            border-radius: 8px;
+            border-left: 5px solid var(--accent-color);
+            display: none;
+        }
+
+        .results-section h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dbedfa;
+            font-size: 16px;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-value {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h1>Calculadora de Contrapiso</h1>
+    
+    <form id="calcForm">
+        <div class="input-row">
+            <div class="form-group">
+                <label for="largo">Largo (metros):</label>
+                <input type="number" id="largo" step="0.01" min="0" placeholder="Ej. 5.0" required>
+            </div>
+            <div class="form-group">
+                <label for="ancho">Ancho (metros):</label>
+                <input type="number" id="ancho" step="0.01" min="0" placeholder="Ej. 4.0" required>
+            </div>
+        </div>
+
+        <div class="input-row">
+            <div class="form-group">
+                <label for="espesor">Espesor (centímetros):</label>
+                <input type="number" id="espesor" step="0.5" min="0" placeholder="Ej. 5" required>
+            </div>
+            <div class="form-group">
+                <label for="desperdicio">Desperdicio (%):</label>
+                <select id="desperdicio">
+                    <option value="5">5% (Normal)</option>
+                    <option value="10" selected>10% (Recomendado)</option>
+                    <option value="15">15%</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="proporcion">Proporción de Mezcla (Cemento : Arena):</label>
+            <select id="proporcion">
+                <option value="1-4">1:4 (Mayor resistencia)</option>
+                <option value="1-5" selected>1:5 (Estándar para contrapiso)</option>
+            </select>
+        </div>
+
+        <button type="button" onclick="calcularMateriales()">Calcular Dosis</button>
+    </form>
+
+    <div class="results-section" id="results">
+        <h2>Materiales Requeridos:</h2>
+        <div class="result-item">
+            <span>Volumen Total:</span>
+            <span class="result-value" id="resVolumen">0.00 m³</span>
+        </div>
+        <div class="result-item">
+            <span>Cemento (Bolsas de 42.5 kg):</span>
+            <span class="result-value" id="resCemento">0 bolsas</span>
+        </div>
+        <div class="result-item">
+            <span>Arena Gruesa:</span>
+            <span class="result-value" id="resArena">0.00 m³</span>
+        </div>
+        <div class="result-item">
+            <span>Agua Estimada:</span>
+            <span class="result-value" id="resAgua">0 litros</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calcularMateriales() {
+        // Obtener valores de los campos
+        const largo = parseFloat(document.getElementById('largo').value);
+        const ancho = parseFloat(document.getElementById('ancho').value);
+        const espesorCm = parseFloat(document.getElementById('espesor').value);
+        const desperdicio = parseFloat(document.getElementById('desperdicio').value) / 100;
+        const proporcion = document.getElementById('proporcion').value;
+
+        // Validar entradas básicas
+        if (isNaN(largo) || isNaN(ancho) || isNaN(espesorCm) || largo <= 0 || ancho <= 0 || espesorCm <= 0) {
+            alert("Por favor, ingrese valores válidos mayores a cero.");
+            return;
+        }
+
+        // Calcular volumen base en m³
+        const espesorM = espesorCm / 100;
+        let volumen = largo * ancho * espesorM;
+        
+        // Añadir el porcentaje de desperdicio
+        volumen = volumen * (1 + desperdicio);
+
+        // Factores de dosificación estándar por m³ de mortero para bolsas de 42.5 kg
+        let factorCemento = 0;
+        let factorArena = 1.05; // Consumo promedio de arena por m³ de mortero debido a la compactación
+        let factorAgua = 220;   // Litros promedio por m³
+
+        if (proporcion === "1-4") {
+            factorCemento = 8.5; // Bolsas de cemento por m³
+        } else if (proporcion === "1-5") {
+            factorCemento = 7.0; // Bolsas de cemento por m³
+        }
+
+        // Calcular cantidades totales
+        const totalCemento = Math.ceil(volumen * factorCemento); // Redondear hacia arriba para bolsas completas
+        const totalArena = (volumen * factorArena).toFixed(2);
+        const totalAgua = Math.round(volumen * factorAgua);
+
+        // Mostrar los resultados en la interfaz
+        document.getElementById('resVolumen').innerText = volumen.toFixed(2) + " m³";
+        document.getElementById('resCemento').innerText = totalCemento + " bolsas";
+        document.getElementById('resArena').innerText = totalArena + " m³";
+        document.getElementById('resAgua').innerText = totalAgua + " litros";
+
+        // Hacer visible la sección de resultados
+        document.getElementById('results').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
