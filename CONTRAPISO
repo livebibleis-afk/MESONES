@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto de Construcción - 2° Etapa Agosto</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #2980b9;
+            padding-bottom: 5px;
+            margin-top: 40px;
+            font-size: 1.5em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f1f4f6;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .section-subtitle {
+            background-color: #ecf0f1;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Presupuesto de Construcción</h1>
+    <p class="text-center" style="color: #7f8c8d;">2° Etapa Agosto</p>
+
+    <h2>Materiales para Electricidad</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th class="text-center">UND</th>
+                <th class="text-center">CANT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="section-subtitle">
+                <td colspan="3">Iluminarias e Interruptores</td>
+            </tr>
+            <tr><td>Octagonales para Braquet</td><td class="text-center">UND</td><td class="text-center">7</td></tr>
+            <tr><td>Tuberías de 3/4" PVC</td><td class="text-center">UND</td><td class="text-center">70</td></tr>
+            <tr><td>Cajas Rectangulares para Interruptores</td><td class="text-center">UND</td><td class="text-center">70</td></tr>
+            <tr><td>Cajas de Pase con Tapa Plana 20 x 20</td><td class="text-center">UND</td><td class="text-center">10</td></tr>
+            <tr><td>Cajas de Pase con Tapa Plana 30 x 30</td><td class="text-center">UND</td><td class="text-center">10</td></tr>
+            <tr><td>Pegamento Azul de 1/4</td><td class="text-center">UND</td><td class="text-center">4</td></tr>
+            <tr><td>Hoja de Sierra</td><td class="text-center">UND</td><td class="text-center">3</td></tr>
+            <tr><td>Curvas de 3/4"</td><td class="text-center">UND</td><td class="text-center">160</td></tr>
+            <tr><td>Tablero de Distribución</td><td class="text-center">UND</td><td class="text-center">1</td></tr>
+            <tr><td>Tablero de Control de Bomba</td><td class="text-center">UND</td><td class="text-center">1</td></tr>
+            <tr><td>Tubería de 1" de PVC</td><td class="text-center">UND</td><td class="text-center">10</td></tr>
+            <tr><td>Curvas de 1" de PVC</td><td class="text-center">UND</td><td class="text-center">15</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Tarrajeo y Contrapiso</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th class="text-center">UND</th>
+                <th class="text-center">CANT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Cemento</td><td class="text-center">BLS</td><td class="text-center">170</td></tr>
+            <tr><td>Arena Fina</td><td class="text-center">M3</td><td class="text-center">20</td></tr>
+            <tr><td>Impermeabilizante para Interior de Cisterna Sikatop</td><td class="text-center">KG</td><td class="text-center">13.3</td></tr>
+            <tr><td>Arena Gruesa</td><td class="text-center">M3</td><td class="text-center">10</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Agua Fría y Desagüe</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th class="text-center">UND</th>
+                <th class="text-center">CANT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Tubos 1" PVC</td><td class="text-center">und</td><td class="text-center">4</td></tr>
+            <tr><td>Kits de Accesorios para Cisterna</td><td class="text-center">und</td><td class="text-center">1</td></tr>
+            <tr><td>Tubos 3/4" PVC</td><td class="text-center">und</td><td class="text-center">14</td></tr>
+            <tr><td>Tubos 1/2" PVC</td><td class="text-center">und</td><td class="text-center">12</td></tr>
+            <tr><td>Reducciones de 3/4" a 1/2"</td><td class="text-center">und</td><td class="text-center">9</td></tr>
+            <tr><td>Codos de 1" PVC x 90°</td><td class="text-center">und</td><td class="text-center">4</td></tr>
+            <tr><td>Codos de 3/4" PVC x 90°</td><td class="text-center">und</td><td class="text-center">20</td></tr>
+            <tr><td>Codos de 1/2" PVC x 90°</td><td class="text-center">und</td><td class="text-center">60</td></tr>
+            <tr><td>Juego de Llave de Paso 3/4" PVC Colombianas</td><td class="text-center">und</td><td class="text-center">4</td></tr>
+            <tr><td>Niples de 3/4" PVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Niples de 1/2" PVC</td><td class="text-center">und</td><td class="text-center">6</td></tr>
+            <tr><td>Codos de 1/2" Bronce x 90°</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Uniones de 3/4" PVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Uniones de 1/2" PVC</td><td class="text-center">und</td><td class="text-center">25</td></tr>
+            <tr><td>T 1/2" PVC</td><td class="text-center">und</td><td class="text-center">14</td></tr>
+            <tr><td>T de 3/4" PVC</td><td class="text-center">und</td><td class="text-center">8</td></tr>
+            <tr><td>Tapones Hembra de 1/2"</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Tapones Macho de 1/2" de Rosca</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Tapones Hembra de 3/4"</td><td class="text-center">und</td><td class="text-center">4</td></tr>
+            <tr><td>Tapones Macho de 3/4" de Rosca</td><td class="text-center">und</td><td class="text-center">4</td></tr>
+            <tr><td>Teflón Amarillo</td><td class="text-center">und</td><td class="text-center">12</td></tr>
+            <tr><td>Pegamento Azul Grande</td><td class="text-center">und</td><td class="text-center">1</td></tr>
+            <tr><td>Formador de Empaque (Adex)</td><td class="text-center">und</td><td class="text-center">1</td></tr>
+            <tr><td>Registro Mixto de 2"</td><td class="text-center">und</td><td class="text-center">4</td></tr>
+            <tr><td>Registro Mixto de 4"</td><td class="text-center">und</td><td class="text-center">3</td></tr>
+            <tr><td>Hoja de Sierra</td><td class="text-center">und</td><td class="text-center">2</td></tr>
+            <tr><td>Válvula Check de 3/4"</td><td class="text-center">und</td><td class="text-center">2</td></tr>
+            <tr><td>Adaptadores de 3/4"</td><td class="text-center">und</td><td class="text-center">8</td></tr>
+            <tr><td>Adaptadores de 1/2"</td><td class="text-center">und</td><td class="text-center">12</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Agua Caliente</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th class="text-center">UND</th>
+                <th class="text-center">CANT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Tubos 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">8</td></tr>
+            <tr><td>Codos de 1/2" CPVC x 90°</td><td class="text-center">und</td><td class="text-center">20</td></tr>
+            <tr><td>T de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Codos de Bronce de 1/2"</td><td class="text-center">und</td><td class="text-center">4</td></tr>
+            <tr><td>T de Bronce de 1/2"</td><td class="text-center">und</td><td class="text-center">3</td></tr>
+            <tr><td>Uniones de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Juego de Llave de Paso 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">3</td></tr>
+            <tr><td>Mezcladoras</td><td class="text-center">und</td><td class="text-center">3</td></tr>
+            <tr><td>Adaptadores de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">8</td></tr>
+            <tr><td>Niples de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
+            <tr><td>Válvulas de Control</td><td class="text-center">und</td><td class="text-center">2</td></tr>
+            <tr><td>Pegamento de Tubería CPVC</td><td class="text-center">und</td><td class="text-center">2</td></tr>
+            <tr><td>Teflón Amarillo</td><td class="text-center">und</td><td class="text-center">5</td></tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
