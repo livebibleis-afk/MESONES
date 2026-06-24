@@ -3,182 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presupuesto de Construcción - 2° Etapa Agosto</title>
+    <title>Calculadora de Materiales para Contrapiso</title>
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #d35400;
+            --bg-color: #f4f6f7;
+            --card-bg: #ffffff;
+            --text-color: #34495e;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #ffffff;
+
+        .calculator-container {
+            background-color: var(--card-bg);
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 550px;
         }
+
+        /* Área del Logo */
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .logo-header svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--accent-color);
+        }
+
         h1 {
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
         }
-        h2 {
-            color: #2980b9;
-            border-bottom: 2px solid #2980b9;
-            padding-bottom: 5px;
-            margin-top: 40px;
-            font-size: 1.5em;
+
+        .form-group {
+            margin-bottom: 18px;
         }
-        table {
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .input-row .form-group {
+            flex: 1;
+        }
+
+        input, select {
             width: 100%;
-            border-collapse: collapse;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(211, 84, 0, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-calc {
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-calc:hover {
+            background-color: #1a252f;
+        }
+
+        .btn-print {
+            background-color: #27ae60;
+            color: white;
             margin-top: 15px;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+
+        .btn-print:hover {
+            background-color: #219653;
         }
-        th {
-            background-color: #f8f9fa;
-            color: #2c3e50;
-            font-weight: 600;
+
+        /* Sección de Resultados */
+        .results-section {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid var(--accent-color);
+            display: none;
         }
-        tr:hover {
-            background-color: #f1f4f6;
+
+        .results-section h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 8px;
         }
-        .text-center {
-            text-align: center;
+
+        .print-summary {
+            display: none;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f1f5f9;
+            border-radius: 6px;
         }
-        .section-subtitle {
-            background-color: #ecf0f1;
-            font-weight: bold;
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 15px;
+        }
+
+        .result-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .result-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .result-label svg {
+            width: 20px;
+            height: 20px;
+            fill: #7f8c8d;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: var(--accent-color);
+            font-size: 16px;
+        }
+
+        /* ESTILOS DE IMPRESIÓN Y GUARDADO EN PDF */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                margin: 0;
+            }
+            .calculator-container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            #calcForm, .btn-calc, .btn-print {
+                display: none !important;
+            }
+            .results-section {
+                display: block !important;
+                border: none !important;
+                border-top: 2px solid #000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .print-summary {
+                display: block !important;
+            }
+            .results-section h2 {
+                font-size: 22px;
+                color: black;
+            }
+            .result-value {
+                color: black !important;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Presupuesto de Construcción</h1>
-    <p class="text-center" style="color: #7f8c8d;">2° Etapa Agosto</p>
+<div class="calculator-container">
+    <div class="logo-header">
+        <svg viewBox="0 0 24 24">
+            <path d="M12,2A10,10 0 0,0 2,12C2,16.58 5.08,20.43 9.27,21.56C9.11,20.07 9,18.14 9,16.5C9,15.12 10.12,14 11.5,14H12.5C13.88,14 15,15.12 15,16.5C15,18.14 14.89,20.07 14.73,21.56C18.92,20.43 22,16.58 22,12A10,10 0 0,0 12,2M11.5,15A1.5,1.5 0 0,1 10,13.5A1.5,1.5 0 0,1 11.5,12A1.5,1.5 0 0,1 13,13.5A1.5,1.5 0 0,1 11.5,15M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11Z"/>
+        </svg>
+        <h1>Calculadora de Contrapiso</h1>
+    </div>
+    
+    <form id="calcForm">
+        <div class="input-row">
+            <div class="form-group">
+                <label for="largo">Largo (metros):</label>
+                <input type="number" id="largo" step="0.01" min="0" placeholder="Ej. 5.0" required>
+            </div>
+            <div class="form-group">
+                <label for="ancho">Ancho (metros):</label>
+                <input type="number" id="ancho" step="0.01" min="0" placeholder="Ej. 4.0" required>
+            </div>
+        </div>
 
-    <h2>Materiales para Electricidad</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Descripción</th>
-                <th class="text-center">UND</th>
-                <th class="text-center">CANT</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="section-subtitle">
-                <td colspan="3">Iluminarias e Interruptores</td>
-            </tr>
-            <tr><td>Octagonales para Braquet</td><td class="text-center">UND</td><td class="text-center">7</td></tr>
-            <tr><td>Tuberías de 3/4" PVC</td><td class="text-center">UND</td><td class="text-center">70</td></tr>
-            <tr><td>Cajas Rectangulares para Interruptores</td><td class="text-center">UND</td><td class="text-center">70</td></tr>
-            <tr><td>Cajas de Pase con Tapa Plana 20 x 20</td><td class="text-center">UND</td><td class="text-center">10</td></tr>
-            <tr><td>Cajas de Pase con Tapa Plana 30 x 30</td><td class="text-center">UND</td><td class="text-center">10</td></tr>
-            <tr><td>Pegamento Azul de 1/4</td><td class="text-center">UND</td><td class="text-center">4</td></tr>
-            <tr><td>Hoja de Sierra</td><td class="text-center">UND</td><td class="text-center">3</td></tr>
-            <tr><td>Curvas de 3/4"</td><td class="text-center">UND</td><td class="text-center">160</td></tr>
-            <tr><td>Tablero de Distribución</td><td class="text-center">UND</td><td class="text-center">1</td></tr>
-            <tr><td>Tablero de Control de Bomba</td><td class="text-center">UND</td><td class="text-center">1</td></tr>
-            <tr><td>Tubería de 1" de PVC</td><td class="text-center">UND</td><td class="text-center">10</td></tr>
-            <tr><td>Curvas de 1" de PVC</td><td class="text-center">UND</td><td class="text-center">15</td></tr>
-        </tbody>
-    </table>
+        <div class="input-row">
+            <div class="form-group">
+                <label for="espesor">Espesor (centímetros):</label>
+                <input type="number" id="espesor" step="0.5" min="0" placeholder="Ej. 5" required>
+            </div>
+            <div class="form-group">
+                <label for="desperdicio">Desperdicio (%):</label>
+                <select id="desperdicio">
+                    <option value="5">5% (Mínimo)</option>
+                    <option value="10" selected>10% (Recomendado)</option>
+                    <option value="15">15% (Muchos cortes)</option>
+                </select>
+            </div>
+        </div>
 
-    <h2>Tarrajeo y Contrapiso</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Descripción</th>
-                <th class="text-center">UND</th>
-                <th class="text-center">CANT</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Cemento</td><td class="text-center">BLS</td><td class="text-center">170</td></tr>
-            <tr><td>Arena Fina</td><td class="text-center">M3</td><td class="text-center">20</td></tr>
-            <tr><td>Impermeabilizante para Interior de Cisterna Sikatop</td><td class="text-center">KG</td><td class="text-center">13.3</td></tr>
-            <tr><td>Arena Gruesa</td><td class="text-center">M3</td><td class="text-center">10</td></tr>
-        </tbody>
-    </table>
+        <div class="form-group">
+            <label for="proporcion">Proporción de Mezcla (Cemento : Arena):</label>
+            <select id="proporcion">
+                <option value="1-4">1:4 (Alta resistencia)</option>
+                <option value="1-5" selected>1:5 (Estándar de obra)</option>
+            </select>
+        </div>
 
-    <h2>Agua Fría y Desagüe</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Descripción</th>
-                <th class="text-center">UND</th>
-                <th class="text-center">CANT</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Tubos 1" PVC</td><td class="text-center">und</td><td class="text-center">4</td></tr>
-            <tr><td>Kits de Accesorios para Cisterna</td><td class="text-center">und</td><td class="text-center">1</td></tr>
-            <tr><td>Tubos 3/4" PVC</td><td class="text-center">und</td><td class="text-center">14</td></tr>
-            <tr><td>Tubos 1/2" PVC</td><td class="text-center">und</td><td class="text-center">12</td></tr>
-            <tr><td>Reducciones de 3/4" a 1/2"</td><td class="text-center">und</td><td class="text-center">9</td></tr>
-            <tr><td>Codos de 1" PVC x 90°</td><td class="text-center">und</td><td class="text-center">4</td></tr>
-            <tr><td>Codos de 3/4" PVC x 90°</td><td class="text-center">und</td><td class="text-center">20</td></tr>
-            <tr><td>Codos de 1/2" PVC x 90°</td><td class="text-center">und</td><td class="text-center">60</td></tr>
-            <tr><td>Juego de Llave de Paso 3/4" PVC Colombianas</td><td class="text-center">und</td><td class="text-center">4</td></tr>
-            <tr><td>Niples de 3/4" PVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Niples de 1/2" PVC</td><td class="text-center">und</td><td class="text-center">6</td></tr>
-            <tr><td>Codos de 1/2" Bronce x 90°</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Uniones de 3/4" PVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Uniones de 1/2" PVC</td><td class="text-center">und</td><td class="text-center">25</td></tr>
-            <tr><td>T 1/2" PVC</td><td class="text-center">und</td><td class="text-center">14</td></tr>
-            <tr><td>T de 3/4" PVC</td><td class="text-center">und</td><td class="text-center">8</td></tr>
-            <tr><td>Tapones Hembra de 1/2"</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Tapones Macho de 1/2" de Rosca</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Tapones Hembra de 3/4"</td><td class="text-center">und</td><td class="text-center">4</td></tr>
-            <tr><td>Tapones Macho de 3/4" de Rosca</td><td class="text-center">und</td><td class="text-center">4</td></tr>
-            <tr><td>Teflón Amarillo</td><td class="text-center">und</td><td class="text-center">12</td></tr>
-            <tr><td>Pegamento Azul Grande</td><td class="text-center">und</td><td class="text-center">1</td></tr>
-            <tr><td>Formador de Empaque (Adex)</td><td class="text-center">und</td><td class="text-center">1</td></tr>
-            <tr><td>Registro Mixto de 2"</td><td class="text-center">und</td><td class="text-center">4</td></tr>
-            <tr><td>Registro Mixto de 4"</td><td class="text-center">und</td><td class="text-center">3</td></tr>
-            <tr><td>Hoja de Sierra</td><td class="text-center">und</td><td class="text-center">2</td></tr>
-            <tr><td>Válvula Check de 3/4"</td><td class="text-center">und</td><td class="text-center">2</td></tr>
-            <tr><td>Adaptadores de 3/4"</td><td class="text-center">und</td><td class="text-center">8</td></tr>
-            <tr><td>Adaptadores de 1/2"</td><td class="text-center">und</td><td class="text-center">12</td></tr>
-        </tbody>
-    </table>
+        <button type="button" class="btn-calc" onclick="calcularMateriales()">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V14H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M7,18V20H9V18H7M11,18V20H13V18H11M15,16V20H17V16H15Z"/></svg>
+            Calcular Dosis
+        </button>
+    </form>
 
-    <h2>Agua Caliente</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Descripción</th>
-                <th class="text-center">UND</th>
-                <th class="text-center">CANT</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Tubos 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">8</td></tr>
-            <tr><td>Codos de 1/2" CPVC x 90°</td><td class="text-center">und</td><td class="text-center">20</td></tr>
-            <tr><td>T de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Codos de Bronce de 1/2"</td><td class="text-center">und</td><td class="text-center">4</td></tr>
-            <tr><td>T de Bronce de 1/2"</td><td class="text-center">und</td><td class="text-center">3</td></tr>
-            <tr><td>Uniones de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Juego de Llave de Paso 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">3</td></tr>
-            <tr><td>Mezcladoras</td><td class="text-center">und</td><td class="text-center">3</td></tr>
-            <tr><td>Adaptadores de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">8</td></tr>
-            <tr><td>Niples de 1/2" CPVC</td><td class="text-center">und</td><td class="text-center">10</td></tr>
-            <tr><td>Válvulas de Control</td><td class="text-center">und</td><td class="text-center">2</td></tr>
-            <tr><td>Pegamento de Tubería CPVC</td><td class="text-center">und</td><td class="text-center">2</td></tr>
-            <tr><td>Teflón Amarillo</td><td class="text-center">und</td><td class="text-center">5</td></tr>
-        </tbody>
-    </table>
+    <div class="results-section" id="results">
+        <h2>Reporte de Materiales</h2>
+        
+        <div class="print-summary" id="printSummary"></div>
 
+        <div class="result-item">
+            <div class="result-label">
+                <svg viewBox="0 0 24 24"><path d="M12,2L1,7L12,12L23,7L12,2M12,22V13.5L2,8.5V17L12,22M22,17V8.5L12,13.5V22L22,17Z"/></svg>
+                <span>Volumen Total:</span>
+            </div>
+            <span class="result-value" id="resVolumen">0.00 m³</span>
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">
+                <svg viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M16,17H8V15H16V17M16,13H8V11H16V13M16,9H8V7H16V9Z"/></svg>
+                <span>Cemento (Bolsas de 42.5 kg):</span>
+            </div>
+            <span class="result-value" id="resCemento">0 bolsas</span>
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">
+                <svg viewBox="0 0 24 24"><path d="M12,2L1,21H23L12,2M12,6L18.8,18H5.2L12,6Z"/></svg>
+                <span>Arena Gruesa:</span>
+            </div>
+            <span class="result-value" id="resArena">0.00 m³</span>
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">
+                <svg viewBox="0 0 24 24"><path d="M12,2.69C12,2.69 19,10.17 19,15A7,7 0 0,1 12,22A7,7 0 0,1 5,15C5,10.17 12,2.69 12,2.69Z"/></svg>
+                <span>Agua Estimada:</span>
+            </div>
+            <span class="result-value" id="resAgua">0 litros</span>
+        </div>
+
+        <button type="button" class="btn-print" onclick="window.print()">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M18,3H6V7H18M19,12A1,1 0 1,1 18,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z"/></svg>
+            Imprimir / Guardar PDF
+        </button>
+    </div>
 </div>
+
+<script>
+    function calcularMateriales() {
+        const largo = parseFloat(document.getElementById('largo').value);
+        const ancho = parseFloat(document.getElementById('ancho').value);
+        const espesorCm = parseFloat(document.getElementById('espesor').value);
+        const despVal = document.getElementById('desperdicio').value;
+        const desperdicio = parseFloat(despVal) / 100;
+        const proporcion = document.getElementById('proporcion').value;
+
+        if (isNaN(largo) || isNaN(ancho) || isNaN(espesorCm) || largo <= 0 || ancho <= 0 || espesorCm <= 0) {
+            alert("Por favor, ingrese valores válidos mayores a cero.");
+            return;
+        }
+
+        const espesorM = espesorCm / 100;
+        let volumen = largo * ancho * espesorM;
+        volumen = volumen * (1 + desperdicio);
+
+        let factorCemento = 0;
+        let factorArena = 1.05; 
+        let factorAgua = 220;   
+
+        if (proporcion === "1-4") {
+            factorCemento = 8.5; 
+        } else if (proporcion === "1-5") {
+            factorCemento = 7.0; 
+        }
+
+        const totalCemento = Math.ceil(volumen * factorCemento); 
+        const totalArena = (volumen * factorArena).toFixed(2);
+        const totalAgua = Math.round(volumen * factorAgua);
+
+        // Mostrar resultados en pantalla
+        document.getElementById('resVolumen').innerText = volumen.toFixed(2) + " m³";
+        document.getElementById('resCemento').innerText = totalCemento + " bolsas";
+        document.getElementById('resArena').innerText = totalArena + " m³";
+        document.getElementById('resAgua').innerText = totalAgua + " litros";
+
+        // Crear el texto de resumen para el encabezado del PDF impreso
+        const fecha = new Date().toLocaleDateString();
+        document.getElementById('printSummary').innerHTML = `
+            <strong>Fecha de cálculo:</strong> ${fecha}<br>
+            <strong>Dimensiones planteadas:</strong> ${largo.toFixed(2)}m (Largo) x ${ancho.toFixed(2)}m (Ancho)<br>
+            <strong>Espesor:</strong> ${espesorCm} cm | <strong>Mezcla:</strong> ${proporcion.replace('-',':')}<br>
+            <strong>Margen de Desperdicio integrado:</strong> ${despVal}%
+        `;
+
+        document.getElementById('results').style.display = 'block';
+    }
+</script>
 
 </body>
 </html>
