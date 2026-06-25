@@ -169,6 +169,11 @@
             background: #e2e8f0;
         }
 
+        /* Evitar que se haga doble tap para hacer zoom en móviles en los botones */
+        .qty-btn, .btn-copy {
+            touch-action: manipulation;
+        }
+
         .qty-input {
             width: 45px;
             height: 32px;
@@ -234,7 +239,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button onclick="addNewMaterial()">Añadir</button>
+                    <button type="button" onclick="addNewMaterial()">Añadir</button>
                 </div>
             </div>
         </div>
@@ -326,11 +331,9 @@
             if (!categories[item.category]) {
                 categories[item.category] = [];
             }
-            // Guardamos el índice original del array principal para modificarlo correctamente
             categories[item.category].push({ ...item, originalIndex: index });
         });
 
-        // Construir HTML para cada categoría activa
         for (const catName in categories) {
             if (categories[catName].length === 0) continue;
 
@@ -362,13 +365,13 @@
                     <td>${item.unit}</td>
                     <td>
                         <div class="qty-controls">
-                            <button class="qty-btn" onclick="changeQty(${item.originalIndex}, -1)">-</button>
-                            <input type="number" class="qty-input" value="${item.qty}" min="0" onchange="updateQtyDirectly(${item.originalIndex}, this.value)">
-                            <button class="qty-btn" onclick="changeQty(${item.originalIndex}, 1)">+</button>
+                            <button type="button" class="qty-btn" onclick="changeQty(${item.originalIndex}, -1)">-</button>
+                            <input type="number" id="qty-${item.originalIndex}" class="qty-input" value="${item.qty}" min="0" onchange="updateQtyDirectly(${item.originalIndex}, this.value)">
+                            <button type="button" class="qty-btn" onclick="changeQty(${item.originalIndex}, 1)">+</button>
                         </div>
                     </td>
                     <td class="col-action">
-                        <button class="btn-copy" onclick="copyRow('${item.name}', ${item.qty}, '${item.unit}')" title="Copiar este material">📋</button>
+                        <button type="button" class="btn-copy" onclick="copyRow(${item.originalIndex})" title="Copiar este material">📋</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -378,19 +381,25 @@
         }
     }
 
-    // Cambiar cantidad con los botones + y -
+    // NUEVA FUNCIÓN: Ahora solo actualiza el valor visual del input específico, no redibuja la tabla
     function changeQty(index, amount) {
         materialsData[index].qty = Math.max(0, materialsData[index].qty + amount);
-        filterMaterials(); // Mantiene el filtro actual al refrescar
+        const inputElement = document.getElementById('qty-' + index);
+        if (inputElement) {
+            inputElement.value = materialsData[index].qty;
+        }
     }
 
-    // Cambiar cantidad escribiendo directamente en el recuadro
+    // NUEVA FUNCIÓN: Mismo comportamiento, solo afecta al input modificado
     function updateQtyDirectly(index, value) {
         let val = parseInt(value);
         materialsData[index].qty = isNaN(val) || val < 0 ? 0 : val;
+        const inputElement = document.getElementById('qty-' + index);
+        if (inputElement) {
+            inputElement.value = materialsData[index].qty;
+        }
     }
 
-    // Lógica avanzada de filtrado (Texto Completo + Coincidencia de Iniciales)
     function filterMaterials() {
         const query = document.getElementById('searchBar').value.toLowerCase().trim();
         
@@ -401,12 +410,8 @@
 
         const filtered = materialsData.filter(item => {
             const fullName = item.name.toLowerCase();
-            
-            // 1. Comprobación por coincidencia directa de texto
             if (fullName.includes(query)) return true;
 
-            // 2. Comprobación inteligente por Iniciales (ej: 'TPVC' mapeará a 'Tuberías de 3/4" PVC')
-            // Limpiamos caracteres extraños para evaluar solo letras y números de las palabras
             const words = fullName.replace(/[^a-zA-Z0-9\s]/g, '').split(/\s+/);
             const initials = words.map(w => w[0]).join('');
             
@@ -418,7 +423,6 @@
         renderInterface(filtered);
     }
 
-    // Añadir un nuevo material dinámicamente
     function addNewMaterial() {
         const nameInput = document.getElementById('newName');
         const unitSelect = document.getElementById('newUnit');
@@ -431,7 +435,6 @@
             return;
         }
 
-        // Lo agregamos a una categoría general de "Personalizados" o nuevos
         materialsData.unshift({
             name: name,
             unit: unit,
@@ -439,16 +442,16 @@
             category: 'Materiales Agregados Recientemente'
         });
 
-        // Limpiar input y refrescar vista
         nameInput.value = '';
-        document.getElementById('searchBar').value = ''; // Limpiar buscador para ver el nuevo item
+        document.getElementById('searchBar').value = ''; 
         renderInterface(materialsData);
         showToast('Material añadido con éxito');
     }
 
-    // Función nativa para copiar al portapapeles de manera individual
-    function copyRow(name, qty, unit) {
-        const textToCopy = `${name} - ${qty} ${unit}`;
+    // NUEVA FUNCIÓN: Lee el valor directamente de la base de datos para asegurar copiar la cantidad correcta actualizada
+    function copyRow(index) {
+        const item = materialsData[index];
+        const textToCopy = `${item.name} - ${item.qty} ${item.unit}`;
         
         navigator.clipboard.writeText(textToCopy).then(() => {
             showToast(`Copiado: ${textToCopy}`);
@@ -457,7 +460,6 @@
         });
     }
 
-    // Mostrar alerta flotante visual
     function showToast(message) {
         const toast = document.getElementById('toast');
         toast.innerText = message;
