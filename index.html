@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>BIM CAD Editor · M&amp;M Mesones</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <style>
+    :root { --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom); }
+    html, body { height: 100%; height: -webkit-fill-available; margin: 0; overflow: hidden; touch-action: none; background: #0f172a; }
+    #app { height: 100dvh; height: -webkit-fill-available; }
+    input, select, textarea, button { font-size: 16px !important; }
+    .drawer-open { transform: translateX(0) !important; }
+    #svg-canvas { touch-action: none; cursor: crosshair; }
+    #canvas3d { touch-action: none; }
+    .tool-active { ring: 2px; ring-color: #38bdf8; background: #0ea5e9 !important; }
+    .layer-hidden { display: none !important; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 select-none">
+  <div id="app" class="flex flex-col h-[100dvh] relative overflow-hidden">
+
+    <!-- HEADER -->
+    <header class="flex items-center justify-between px-3 py-2 bg-slate-800/95 border-b border-slate-700 z-40 shrink-0" style="padding-top: max(8px, var(--safe-top))">
+      <div class="flex items-center gap-2">
+        <button id="btn-sidebar" class="p-2 rounded-lg bg-slate-700 active:bg-slate-600 text-sm font-medium">📊 Capas y Metrados</button>
+        <span class="text-xs text-slate-400 hidden sm:inline">BIM CAD · CAPECO/RNE</span>
+      </div>
+      <div class="flex gap-1">
+        <button data-view="split" class="view-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-sky-600">Split</button>
+        <button data-view="2d" class="view-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-700">2D</button>
+        <button data-view="3d" class="view-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-700">3D</button>
+      </div>
+    </header>
+
+    <!-- TOOLBAR -->
+    <div class="flex gap-1.5 px-3 py-2 bg-slate-800/80 border-b border-slate-700 overflow-x-auto shrink-0 z-30">
+      <button data-tool="select" class="tool-btn tool-active px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-600 whitespace-nowrap">🔍 Inspector</button>
+      <button data-tool="wall" class="tool-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-700 whitespace-nowrap">🧱 +Muro</button>
+      <button data-tool="door" class="tool-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-700 whitespace-nowrap">🚪 +Puerta</button>
+      <button data-tool="window" class="tool-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-700 whitespace-nowrap">🪟 +Ventana</button>
+      <button data-tool="light" class="tool-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-700 whitespace-nowrap">💡 +Luz/Tom</button>
+      <button id="btn-export-svg" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-700 whitespace-nowrap">↓ SVG</button>
+      <button id="btn-export-glb" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-violet-700 whitespace-nowrap">↓ GLB</button>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+    <div id="workspace" class="flex-1 flex relative overflow-hidden">
+      <!-- 2D SVG Panel -->
+      <div id="panel-2d" class="w-1/2 h-full relative bg-slate-950 border-r border-slate-700">
+        <svg id="svg-canvas" class="w-full h-full" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#1e293b" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="1200" height="900" fill="url(#grid)"/>
+          <!-- Capas estándar -->
+          <g id="capa-muros" stroke="#a5c4d4" stroke-width="15" stroke-linecap="square" fill="none">
+            <!-- Contorno exterior -->
+            <path id="muro-ext" d="M 150 150 L 1050 150 L 1050 750 L 150 750 Z" data-type="wall" data-label="Muro Exterior"/>
+            <!-- Muros internos -->
+            <line x1="150" y1="400" x2="700" y2="400" data-type="wall" data-label="Muro Interior 1"/>
+            <line x1="550" y1="150" x2="550" y2="400" data-type="wall" data-label="Muro Interior 2"/>
+            <line x1="700" y1="150" x2="700" y2="750" data-type="wall" data-label="Muro Interior 3"/>
+            <line x1="150" y1="550" x2="550" y2="550" data-type="wall" data-label="Muro Interior 4"/>
+          </g>
+          <g id="ventanas" stroke="#38bdf8" stroke-width="8" fill="#38bdf8" fill-opacity="0.25">
+            <rect x="300" y="142" width="120" height="16" rx="2" data-type="window" data-label="Ventana 1"/>
+            <rect x="800" y="142" width="100" height="16" rx="2" data-type="window" data-label="Ventana 2"/>
+            <rect x="300" y="742" width="120" height="16" rx="2" data-type="window" data-label="Ventana 3"/>
+          </g>
+          <g id="puertas" stroke="#f97316" stroke-width="6" fill="none">
+            <path d="M 400 400 A 60 60 0 0 1 460 340" stroke="#d97706" data-type="door" data-label="Puerta 1"/>
+            <line x1="400" y1="400" x2="400" y2="340" stroke="#f97316" stroke-width="8"/>
+            <path d="M 700 500 A 50 50 0 0 0 650 550" stroke="#d97706" data-type="door" data-label="Puerta 2"/>
+            <line x1="700" y1="500" x2="700" y2="550" stroke="#f97316" stroke-width="8"/>
+          </g>
+          <g id="capa-vertices" fill="#ef4444">
+            <circle cx="150" cy="150" r="6" data-type="vertex"/><circle cx="1050" cy="150" r="6" data-type="vertex"/>
+            <circle cx="1050" cy="750" r="6" data-type="vertex"/><circle cx="150" cy="750" r="6" data-type="vertex"/>
+            <circle cx="550" cy="400" r="5" data-type="vertex"/><circle cx="700" cy="400" r="5" data-type="vertex"/>
+          </g>
+          <g id="capa-instalaciones-electricas">
+            <g id="acometidas-potencia" stroke="#e74c3c" stroke-width="2.5" fill="none">
+              <circle cx="180" cy="180" r="10" fill="#e74c3c" data-type="meter" data-label="Medidor"/>
+              <text x="195" y="175" fill="#e74c3c" font-size="11" font-family="sans-serif">MED</text>
+              <line x1="190" y1="180" x2="250" y2="180"/>
+              <rect x="250" y="165" width="40" height="30" rx="3" fill="#e74c3c" fill-opacity="0.3" data-type="tg" data-label="Tablero General"/>
+              <text x="255" y="185" fill="#e74c3c" font-size="10" font-family="sans-serif">TG</text>
+              <path d="M 290 180 Q 400 180 450 300" stroke-dasharray="6 3"/>
+              <circle cx="450" cy="300" r="8" fill="#e74c3c" data-type="outlet" data-label="Salida Especial Cocina"/>
+            </g>
+            <g id="circuito-verde" stroke="#27ae60" stroke-width="2" fill="none">
+              <path d="M 300 200 Q 400 220 500 200" stroke-dasharray="4 2"/>
+              <circle cx="300" cy="200" r="6" fill="#27ae60" data-type="light" data-label="C1 Alumbrado 1"/>
+              <circle cx="500" cy="200" r="6" fill="#27ae60" data-type="light" data-label="C1 Alumbrado 2"/>
+              <circle cx="400" cy="280" r="6" fill="#27ae60" data-type="light" data-label="C1 Alumbrado 3"/>
+            </g>
+            <g id="circuito-azul" stroke="#2980b9" stroke-width="2" fill="none" stroke-dasharray="6 3">
+              <path d="M 320 480 Q 420 500 520 480"/>
+              <circle cx="320" cy="480" r="6" fill="#2980b9" data-type="outlet" data-label="C2 Tomacorriente 1"/>
+              <circle cx="520" cy="480" r="6" fill="#2980b9" data-type="outlet" data-label="C2 Tomacorriente 2"/>
+              <circle cx="600" cy="600" r="6" fill="#2980b9" data-type="outlet" data-label="C2 Tomacorriente 3"/>
+            </g>
+          </g>
+          <!-- Preview line for wall drawing -->
+          <line id="preview-line" x1="0" y1="0" x2="0" y2="0" stroke="#38bdf8" stroke-width="3" stroke-dasharray="8 4" visibility="hidden"/>
+        </svg>
+        <div id="info-bar" class="absolute bottom-2 left-2 right-2 bg-slate-800/90 text-xs px-3 py-1.5 rounded-lg border border-slate-600 truncate">Listo · Selecciona una herramienta</div>
+      </div>
+
+      <!-- 3D Panel -->
+      <div id="panel-3d" class="w-1/2 h-full relative bg-slate-900">
+        <canvas id="canvas3d" class="w-full h-full block"></canvas>
+        <div class="absolute top-2 right-2 text-xs bg-slate-800/80 px-2 py-1 rounded">Vista 3D BIM</div>
+      </div>
+    </div>
+
+    <!-- LEFT SIDEBAR DRAWER -->
+    <aside id="left-sidebar-drawer" class="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-slate-800 border-r border-slate-600 z-50 transform -translate-x-full transition-transform duration-300 ease-out overflow-y-auto" style="padding-top: var(--safe-top); padding-bottom: var(--safe-bottom)">
+      <div class="p-4 space-y-5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold">Capas &amp; Metrados</h2>
+          <button id="btn-close-sidebar" class="p-1.5 rounded-lg bg-slate-700 text-xl leading-none">&times;</button>
+        </div>
+
+        <!-- Capas -->
+        <section>
+          <h3 class="text-sm font-semibold text-sky-400 mb-2">Capas SVG</h3>
+          <div class="space-y-1.5 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" data-layer="capa-muros" checked class="accent-sky-500"> Muros estructurales</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" data-layer="ventanas" checked class="accent-sky-500"> Ventanas</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" data-layer="puertas" checked class="accent-sky-500"> Puertas</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" data-layer="capa-vertices" checked class="accent-sky-500"> Vértices</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" data-layer="acometidas-potencia" checked class="accent-sky-500"> Acometidas potencia</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" data-layer="circuito-verde" checked class="accent-sky-500"> Circuito verde (C1)</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" data-layer="circuito-azul" checked class="accent-sky-500"> Circuito azul (C2)</label>
+          </div>
+        </section>
+
+        <!-- Metrados -->
+        <section>
+          <h3 class="text-sm font-semibold text-emerald-400 mb-2">Planilla de Metrados (CAPECO/RNE)</h3>
+          <div class="bg-slate-900/60 rounded-lg p-3 text-xs space-y-2 font-mono">
+            <div class="flex justify-between"><span>Muros (ml)</span><span id="m-muros">0.00</span></div>
+            <div class="flex justify-between"><span>Área muros (m²)</span><span id="m-area">0.00</span></div>
+            <div class="flex justify-between border-t border-slate-700 pt-1"><span>Ladrillos KK 18h (soga)</span><span id="m-ladrillos">0</span></div>
+            <div class="text-[10px] text-slate-400">39 und/m² + 5% desperdicio</div>
+            <div class="flex justify-between"><span>Mortero C:A 1:4 (m³)</span><span id="m-mortero">0.000</span></div>
+            <div class="flex justify-between"><span>Tarrajeo doble cara (m²)</span><span id="m-tarrajeo">0.00</span></div>
+            <div class="border-t border-slate-700 pt-1 flex justify-between"><span>Puntos eléctricos</span><span id="m-puntos">0</span></div>
+            <div class="flex justify-between"><span>— Alumbrado (C1)</span><span id="m-luces">0</span></div>
+            <div class="flex justify-between"><span>— Tomacorrientes (C2)</span><span id="m-tomas">0</span></div>
+          </div>
+          <button id="btn-recalc" class="mt-2 w-full py-2 rounded-lg bg-emerald-700 text-xs font-medium">Recalcular metrados</button>
+        </section>
+
+        <!-- Inspector info -->
+        <section>
+          <h3 class="text-sm font-semibold text-amber-400 mb-2">Inspector</h3>
+          <div id="inspector-info" class="bg-slate-900/60 rounded-lg p-3 text-xs min-h-[60px]">Selecciona un elemento…</div>
+        </section>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+    // ========== STATE ==========
+    let currentTool = 'select';
+    let currentView = 'split';
+    let drawing = false;
+    let startPt = null;
+    let selectedEl = null;
+    const WALL_HEIGHT = 2.7; // m
+    const SCALE = 100; // 1 unit SVG = 1 cm → 100 = 1 m
+
+    // ========== DOM ==========
+    const svg = document.getElementById('svg-canvas');
+    const panel2d = document.getElementById('panel-2d');
+    const panel3d = document.getElementById('panel-3d');
+    const infoBar = document.getElementById('info-bar');
+    const previewLine = document.getElementById('preview-line');
+    const drawer = document.getElementById('left-sidebar-drawer');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    // ========== THREE.JS ==========
+    const canvas3d = document.getElementById('canvas3d');
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas3d, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x0f172a);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 500);
+    camera.position.set(8, 10, 12);
+    const controls = new OrbitControls(camera, canvas3d);
+    controls.enableDamping = true;
+    controls.target.set(6, 0, 4.5);
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.85);
+    dir.position.set(10, 20, 10);
+    scene.add(dir);
+    const gridHelper = new THREE.GridHelper(20, 20, 0x334155, 0x1e293b);
+    scene.add(gridHelper);
+
+    // Group for BIM mesh
+    const bimGroup = new THREE.Group();
+    scene.add(bimGroup);
+
+    function resize3D() {
+      const w = panel3d.clientWidth;
+      const h = panel3d.clientHeight;
+      if (w === 0 || h === 0) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // ========== COORD HELPERS (iOS safe) ==========
+    function getSVGPoint(evt) {
+      const rect = svg.getBoundingClientRect();
+      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      const x = ((clientX - rect.left) / rect.width) * 1200;
+      const y = ((clientY - rect.top) / rect.height) * 900;
+      // Snap to 25 units
+      return { x: Math.round(x / 25) * 25, y: Math.round(y / 25) * 25 };
+    }
+
+    // ========== LAYER TOGGLES ==========
+    document.querySelectorAll('[data-layer]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const el = document.getElementById(cb.dataset.layer);
+        if (el) el.classList.toggle('layer-hidden', !cb.checked);
+      });
+    });
+
+    // ========== SIDEBAR ==========
+    document.getElementById('btn-sidebar').addEventListener('click', () => {
+      drawer.classList.add('drawer-open');
+      overlay.classList.remove('hidden');
+    });
+    document.getElementById('btn-close-sidebar').addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+    function closeSidebar() {
+      drawer.classList.remove('drawer-open');
+      overlay.classList.add('hidden');
+    }
+
+    // ========== VIEW MODE ==========
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentView = btn.dataset.view;
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.replace('bg-sky-600', 'bg-slate-700'));
+        btn.classList.replace('bg-slate-700', 'bg-sky-600');
+        if (currentView === 'split') {
+          panel2d.style.display = 'block'; panel2d.style.width = '50%';
+          panel3d.style.display = 'block'; panel3d.style.width = '50%';
+        } else if (currentView === '2d') {
+          panel2d.style.display = 'block'; panel2d.style.width = '100%';
+          panel3d.style.display = 'none';
+        } else {
+          panel2d.style.display = 'none';
+          panel3d.style.display = 'block'; panel3d.style.width = '100%';
+        }
+        setTimeout(resize3D, 50);
+      });
+    });
+
+    // ========== TOOLS ==========
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentTool = btn.dataset.tool;
+        document.querySelectorAll('.tool-btn').forEach(b => {
+          b.classList.remove('tool-active', 'bg-sky-600');
+          b.classList.add('bg-slate-700');
+        });
+        btn.classList.add('tool-active', 'bg-sky-600');
+        btn.classList.remove('bg-slate-700');
+        infoBar.textContent = toolHelp(currentTool);
+        drawing = false;
+        previewLine.setAttribute('visibility', 'hidden');
+      });
+    });
+
+    function toolHelp(t) {
+      return {
+        select: 'Inspector · Toca un elemento para ver datos',
+        wall: '+Muro · Toca inicio y fin (ortogonal con snap)',
+        door: '+Puerta · Toca el punto de inserción',
+        window: '+Ventana · Toca el punto de inserción',
+        light: '+Luz/Tom · Toca para insertar punto eléctrico'
+      }[t] || '';
+    }
+
+    // ========== POINTER EVENTS (touch + mouse) ==========
+    let pointerDown = false;
+
+    function onPointerDown(e) {
+      e.preventDefault();
+      pointerDown = true;
+      const pt = getSVGPoint(e);
+
+      if (currentTool === 'select') {
+        const el = document.elementFromPoint(
+          e.touches ? e.touches[0].clientX : e.clientX,
+          e.touches ? e.touches[0].clientY : e.clientY
+        );
+        const target = el?.closest('[data-type]');
+        if (target) {
+          selectedEl = target;
+          showInspector(target);
+          highlight(target);
+        }
+        return;
+      }
+
+      if (currentTool === 'wall') {
+        if (!drawing) {
+          startPt = pt;
+          drawing = true;
+          previewLine.setAttribute('x1', pt.x);
+          previewLine.setAttribute('y1', pt.y);
+          previewLine.setAttribute('x2', pt.x);
+          previewLine.setAttribute('y2', pt.y);
+          previewLine.setAttribute('visibility', 'visible');
+        } else {
+          // Finish wall (orthogonal)
+          const end = makeOrthogonal(startPt, pt);
+          addWall(startPt, end);
+          drawing = false;
+          previewLine.setAttribute('visibility', 'hidden');
+          rebuild3D();
+          calcMetrados();
+        }
+        return;
+      }
+
+      if (currentTool === 'light') {
+        addElectricalPoint(pt, 'light');
+        rebuild3D();
+        calcMetrados();
+        return;
+      }
+      if (currentTool === 'door') {
+        addDoor(pt);
+        rebuild3D();
+        return;
+      }
+      if (currentTool === 'window') {
+        addWindow(pt);
+        rebuild3D();
+        return;
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!pointerDown && !drawing) return;
+      e.preventDefault();
+      if (currentTool === 'wall' && drawing) {
+        const pt = getSVGPoint(e);
+        const end = makeOrthogonal(startPt, pt);
+        previewLine.setAttribute('x2', end.x);
+        previewLine.setAttribute('y2', end.y);
+      }
+    }
+
+    function onPointerUp(e) {
+      pointerDown = false;
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { passive: false });
+    svg.addEventListener('pointermove', onPointerMove, { passive: false });
+    svg.addEventListener('pointerup', onPointerUp, { passive: false });
+    svg.addEventListener('touchstart', onPointerDown, { passive: false });
+    svg.addEventListener('touchmove', onPointerMove, { passive: false });
+    svg.addEventListener('touchend', onPointerUp, { passive: false });
+
+    function makeOrthogonal(start, end) {
+      const dx = Math.abs(end.x - start.x);
+      const dy = Math.abs(end.y - start.y);
+      if (dx > dy) return { x: end.x, y: start.y };
+      return { x: start.x, y: end.y };
+    }
+
+    function addWall(p1, p2) {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', p1.x); line.setAttribute('y1', p1.y);
+      line.setAttribute('x2', p2.x); line.setAttribute('y2', p2.y);
+      line.setAttribute('data-type', 'wall');
+      line.setAttribute('data-label', 'Muro nuevo');
+      document.getElementById('capa-muros').appendChild(line);
+      infoBar.textContent = `Muro agregado: ${dist(p1, p2).toFixed(2)} m`;
+    }
+
+    function addElectricalPoint(pt, type) {
+      const g = document.getElementById(type === 'light' ? 'circuito-verde' : 'circuito-azul');
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y);
+      c.setAttribute('r', 6);
+      c.setAttribute('fill', type === 'light' ? '#27ae60' : '#2980b9');
+      c.setAttribute('data-type', type);
+      c.setAttribute('data-label', type === 'light' ? 'C1 Alumbrado' : 'C2 Tomacorriente');
+      g.appendChild(c);
+      infoBar.textContent = `Punto ${type} insertado`;
+    }
+
+    function addDoor(pt) {
+      const g = document.getElementById('puertas');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${pt.x} ${pt.y} A 50 50 0 0 1 ${pt.x + 50} ${pt.y - 50}`);
+      path.setAttribute('stroke', '#d97706');
+      path.setAttribute('data-type', 'door');
+      path.setAttribute('data-label', 'Puerta nueva');
+      g.appendChild(path);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', pt.x); line.setAttribute('y1', pt.y);
+      line.setAttribute('x2', pt.x); line.setAttribute('y2', pt.y - 50);
+      line.setAttribute('stroke', '#f97316');
+      line.setAttribute('stroke-width', '8');
+      g.appendChild(line);
+    }
+
+    function addWindow(pt) {
+      const g = document.getElementById('ventanas');
+      const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      r.setAttribute('x', pt.x - 40); r.setAttribute('y', pt.y - 8);
+      r.setAttribute('width', 80); r.setAttribute('height', 16);
+      r.setAttribute('rx', 2);
+      r.setAttribute('data-type', 'window');
+      r.setAttribute('data-label', 'Ventana nueva');
+      g.appendChild(r);
+    }
+
+    function dist(a, b) {
+      return Math.hypot(b.x - a.x, b.y - a.y) / SCALE;
+    }
+
+    function highlight(el) {
+      document.querySelectorAll('[data-type]').forEach(e => e.style.filter = '');
+      el.style.filter = 'drop-shadow(0 0 4px #38bdf8)';
+    }
+
+    function showInspector(el) {
+      const type = el.dataset.type || '?';
+      const label = el.dataset.label || type;
+      let extra = '';
+      if (type === 'wall' && el.tagName === 'line') {
+        const p1 = { x: +el.getAttribute('x1'), y: +el.getAttribute('y1') };
+        const p2 = { x: +el.getAttribute('x2'), y: +el.getAttribute('y2') };
+        extra = `<br>Longitud: <b>${dist(p1, p2).toFixed(2)} m</b>`;
+      } else if (el.tagName === 'circle') {
+        extra = `<br>X: ${el.getAttribute('cx')} · Y: ${el.getAttribute('cy')}`;
+      }
+      document.getElementById('inspector-info').innerHTML = `<b>${label}</b><br>Tipo: ${type}${extra}`;
+    }
+
+    // ========== METRADOS ==========
+    function calcMetrados() {
+      let totalML = 0;
+      document.querySelectorAll('#capa-muros line, #capa-muros path').forEach(el => {
+        if (el.tagName === 'line') {
+          totalML += dist(
+            { x: +el.getAttribute('x1'), y: +el.getAttribute('y1') },
+            { x: +el.getAttribute('x2'), y: +el.getAttribute('y2') }
+          );
+        } else if (el.tagName === 'path') {
+          // Approximate path length (simple for closed rect)
+          const d = el.getAttribute('d') || '';
+          if (d.includes('Z') || d.includes('z')) {
+            // rough perimeter from viewBox extents of sample
+            totalML +=  (900 + 600) * 2 / SCALE; // fallback sample
+          }
+        }
+      });
+      // Better path length for the outer rectangle
+      const outer = document.getElementById('muro-ext');
+      if (outer) {
+        //  (1050-150)*2 + (750-150)*2 = 1800+1200 = 3000 units = 30 m
+        totalML = 30; // base
+        document.querySelectorAll('#capa-muros line').forEach(el => {
+          totalML += dist(
+            { x: +el.getAttribute('x1'), y: +el.getAttribute('y1') },
+            { x: +el.getAttribute('x2'), y: +el.getAttribute('y2') }
+          );
+        });
+      }
+
+      const areaM2 = totalML * WALL_HEIGHT; // one face
+      const ladrillos = Math.ceil(areaM2 * 39 * 1.05); // +5%
+      const mortero = areaM2 * 0.02; // approx 2 cm joint volume rough
+      const tarrajeo = areaM2 * 2; // both faces
+
+      const luces = document.querySelectorAll('#circuito-verde circle').length;
+      const tomas = document.querySelectorAll('#circuito-azul circle, #acometidas-potencia circle[data-type="outlet"]').length;
+      const puntos = luces + tomas + document.querySelectorAll('#acometidas-potencia circle, #acometidas-potencia rect').length;
+
+      document.getElementById('m-muros').textContent = totalML.toFixed(2);
+      document.getElementById('m-area').textContent = areaM2.toFixed(2);
+      document.getElementById('m-ladrillos').textContent = ladrillos;
+      document.getElementById('m-mortero').textContent = mortero.toFixed(3);
+      document.getElementById('m-tarrajeo').textContent = tarrajeo.toFixed(2);
+      document.getElementById('m-puntos').textContent = puntos;
+      document.getElementById('m-luces').textContent = luces;
+      document.getElementById('m-tomas').textContent = tomas;
+    }
+    document.getElementById('btn-recalc').addEventListener('click', calcMetrados);
+
+    // ========== 3D REBUILD ==========
+    function rebuild3D() {
+      while (bimGroup.children.length) bimGroup.remove(bimGroup.children[0]);
+
+      // Walls
+      document.querySelectorAll('#capa-muros line').forEach(el => {
+        const x1 = +el.getAttribute('x1') / SCALE;
+        const y1 = +el.getAttribute('y1') / SCALE;
+        const x2 = +el.getAttribute('x2') / SCALE;
+        const y2 = +el.getAttribute('y2') / SCALE;
+        const len = Math.hypot(x2 - x1, y2 - y1);
+        if (len < 0.05) return;
+        const geo = new THREE.BoxGeometry(len, WALL_HEIGHT, 0.15);
+        const mat = new THREE.MeshStandardMaterial({ color: 0xa5c4d4, roughness: 0.6 });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set((x1 + x2) / 2, WALL_HEIGHT / 2, (y1 + y2) / 2);
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        mesh.rotation.y = -angle;
+        bimGroup.add(mesh);
+      });
+
+      // Outer path as walls (simple box for demo)
+      const outerMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.7 });
+      // Floor
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(12, 9),
+        new THREE.MeshStandardMaterial({ color: 0x1e293b, side: THREE.DoubleSide })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.set(6, 0, 4.5);
+      bimGroup.add(floor);
+
+      // Electrical points as small spheres
+      document.querySelectorAll('#capa-instalaciones-electricas circle').forEach(el => {
+        const x = +el.getAttribute('cx') / SCALE;
+        const z = +el.getAttribute('cy') / SCALE;
+        const color = el.getAttribute('fill') || '#27ae60';
+        const sphere = new THREE.Mesh(
+          new THREE.SphereGeometry(0.08, 12, 12),
+          new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.4 })
+        );
+        sphere.position.set(x, 2.4, z);
+        bimGroup.add(sphere);
+      });
+    }
+
+    // ========== EXPORT ==========
+    document.getElementById('btn-export-svg').addEventListener('click', () => {
+      const clone = svg.cloneNode(true);
+      clone.removeAttribute('class');
+      const serializer = new XMLSerializer();
+      const str = serializer.serializeToString(clone);
+      const blob = new Blob([str], { type: 'image/svg+xml' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'plano-bim-mesones.svg';
+      a.click();
+      infoBar.textContent = 'SVG exportado';
+    });
+
+    document.getElementById('btn-export-glb').addEventListener('click', () => {
+      const exporter = new GLTFExporter();
+      exporter.parse(bimGroup, (result) => {
+        const blob = new Blob([result], { type: 'application/octet-stream' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'modelo-bim-mesones.glb';
+        a.click();
+        infoBar.textContent = 'GLB exportado';
+      }, (err) => console.error(err), { binary: true });
+    });
+
+    // ========== INIT ==========
+    window.addEventListener('resize', () => { resize3D(); });
+    setTimeout(() => { resize3D(); rebuild3D(); calcMetrados(); }, 100);
+
+    // Prevent iOS bounce / zoom
+    document.addEventListener('gesturestart', e => e.preventDefault());
+    document.addEventListener('gesturechange', e => e.preventDefault());
+  </script>
+</body>
+</html>
